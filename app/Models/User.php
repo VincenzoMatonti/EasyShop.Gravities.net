@@ -34,4 +34,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserInfo::class);
     }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class);
+    }
 }

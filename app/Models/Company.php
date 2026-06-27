@@ -20,5 +20,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 class Company extends Model
 {
-    //
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
