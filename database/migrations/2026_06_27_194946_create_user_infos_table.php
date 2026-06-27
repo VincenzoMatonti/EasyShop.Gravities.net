@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_infos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('name',50)->nullable();
             $table->string('surname',50)->nullable();
             $table->string('tax_code',16)->unique()->nullable();

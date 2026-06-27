@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Gender;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
@@ -21,6 +22,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 class UserInfo extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'gender' => Gender::class,
+        ];
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

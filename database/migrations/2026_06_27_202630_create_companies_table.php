@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('company_name',50)->nullable();
             $table->string('vat_number',11)->unique()->nullable();
             $table->string('tax_code',16)->unique()->nullable();
