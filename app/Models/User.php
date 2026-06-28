@@ -73,4 +73,45 @@ class User extends Authenticatable
     {
         return $this->hasMany(Phone::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    private function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles->pluck('name')->toArray();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isManager(): bool
+    {
+        return $this->hasRole('manager');
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->hasRole('customer');
+    }
 }
