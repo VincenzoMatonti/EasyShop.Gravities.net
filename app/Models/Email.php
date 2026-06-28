@@ -2,31 +2,25 @@
 
 namespace App\Models;
 
-use App\LabelAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 #[Fillable([
     'user_id',
-    'label',
-    'street',
-    'number',
-    'zip_code',
-    'city',
-    'province',
-    'country',
-    'is_shipping',
-    'is_billing',
-    'is_default'
+    'email',
+    'is_primary',
+    'is_deleted',
+    'verified_at',
 ])]
 
-
-class Address extends Model
+class Email extends Model
 {
     protected function casts(): array
     {
         return [
-            'label' => LabelAddress::class,
+            'is_primary' => 'boolean',
+            'is_deleted' => 'boolean',
+            'verified_at' => 'datetime',
         ];
     }
 
