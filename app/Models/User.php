@@ -73,4 +73,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Phone::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 }
