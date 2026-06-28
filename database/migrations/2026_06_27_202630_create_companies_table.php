@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->string('company_name',50)->nullable();
             $table->string('vat_number',11)->unique()->nullable();
             $table->string('tax_code',16)->unique()->nullable();
@@ -23,7 +22,6 @@ return new class extends Migration
             $table->string('sdi_code',7)->nullable();
             $table->string('legal_address',255)->nullable();
             $table->string('website',255)->nullable();
-            $table->string('phone',20)->nullable();
             $table->timestamps();
         });
     }

@@ -14,8 +14,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'pec',
     'sdi_code',
     'legal_address',
-    'website',
-    'phone'
+    'website'
 ])]
 
 class Company extends Model

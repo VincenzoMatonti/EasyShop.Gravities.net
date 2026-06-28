@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 #[Fillable([
     'user_id',
+    'is_deleted',
     'label',
     'street',
     'number',

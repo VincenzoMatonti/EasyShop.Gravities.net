@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'name',
     'surname',
     'tax_code',
-    'phone',
     'birth_date',
     'birth_place',
     'nationality',

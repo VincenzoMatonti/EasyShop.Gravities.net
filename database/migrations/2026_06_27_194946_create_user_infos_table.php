@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name',50)->nullable();
             $table->string('surname',50)->nullable();
             $table->string('tax_code',16)->unique()->nullable();
-            $table->string('phone',20)->nullable();
             $table->date('birth_date')->nullable();
             $table->string('birth_place',100)->nullable();
             $table->string('nationality',50)->nullable();
