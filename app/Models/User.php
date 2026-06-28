@@ -3,6 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Customer\Address;
+use App\Models\Customer\Company;
+use App\Models\Customer\CustomerProfile;
+use App\Models\Customer\Email;
+use App\Models\Customer\Phone;
+use App\Models\Customer\Role;
+use App\Models\Customer\UserInfo;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
