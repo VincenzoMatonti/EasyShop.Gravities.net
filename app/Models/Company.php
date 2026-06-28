@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 class Company extends Model
 {
     protected $fillable = [
-        'user_id',
         'company_name',
         'vat_number',
         'tax_code',
@@ -17,8 +16,13 @@ class Company extends Model
         'legal_address',
         'website'
     ];
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class);
+    }
+
+    public function customerProfiles()
+    {
+        return $this->hasMany(CustomerProfile::class);
     }
 }

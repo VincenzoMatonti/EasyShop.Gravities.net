@@ -16,7 +16,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name',
         'email',
         'password',
         'is_deleted'
@@ -54,9 +53,14 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class);
     }
 
-    public function company()
+    public function companies()
     {
-        return $this->hasOne(Company::class);
+        return $this->belongsToMany(Company::class);
+    }
+
+    public function customerProfiles()
+    {
+        return $this->hasMany(CustomerProfile::class);
     }
 
     public function addresses()

@@ -6,10 +6,6 @@
                 <form action="{{route('register')}}" method="POST" class="mybgsec shadow rounded p-5 mt-5">
                     @csrf
                     <div class="mb-3">
-                        <label for="name" class="form-label">Username:</label>
-                        <input type="text" class="form-control shadow" id="name" name="name" placeholder="Ex.Mario Rossi">
-                    </div>
-                    <div class="mb-3">
                         <label for="registerEmail" class="form-label">E-mail:</label>
                         <input type="email" class="form-control shadow" id="loginEmail" name="email" placeholder="Ex.mariorossi@mail.com">
                     </div>
