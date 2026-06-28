@@ -1,0 +1,22 @@
+1. customer_profiles (CORE)
+id
+user_id
+label (es: "Casa", "Azienda", "Default") (string)
+type (personal | business) (int)Enum
+is_default (bool)
+is_deleted (bool)
+created_at
+updated_at
+✔ questo è il cuore
+
+2. segments (SOLO LABEL LOGICHE)
+id
+name (vip, standard, reseller) (string)
+created_at
+updated_at
+✔ nessuna logica economica qui
+
+3. pivot customer_profile_segment
+customer_profile_id
+segment_id
+✔ molti a molti

@@ -49,14 +49,38 @@ User
  ├── CustomerProfile (work / business)
 
 
-User (obbligatorio)
- ├── UserInfo (opzionale ma 1 max)
- ├── Company (opzionale, 0..1)
+ User (obbligatorio)
+ ├── UserInfo (0..1)
+ ├── Companies (N)  ← tramite pivot
  ├── CustomerProfiles (1..N) -- viene creato al primo evento utile, non subito al signup
  ├── Addresses (0..N)
  ├── Emails (0..N)
  └── Phones (0..N)
 
+ Company
+ └── Users (N) ← pivot user_company
+
+user_company
+- user_id
+- company_id
+- role
+
+CustomerProfile
+- id
+- user_id (OBBLIGATORIO)
+- company_id (nullable)
+- name
+- type (personal | business)
+- is_default
+- is_deleted
+
+Segment
+- id
+- name
+
+customer_profile_segment
+- customer_profile_id
+- segment_id
 
 SIGNIFICATO DEL MODELLO:
 
