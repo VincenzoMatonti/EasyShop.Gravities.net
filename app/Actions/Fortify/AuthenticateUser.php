@@ -4,15 +4,16 @@ namespace App\Actions\Fortify;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Laravel\Fortify\Http\Requests\LoginRequest;
 
 class AuthenticateUser
 {
-    public function __invoke(array $input): void
+    public function __invoke(LoginRequest $loginRequest): void
     {
-        $authenticated = Auth::attempt([
-            'email' => $input['email'],
-            'password' => $input['password'],
-        ], $input['remember'] ?? false);
+        $authenticated = Auth::attempt(
+            $loginRequest->only('email', 'password'),
+            $loginRequest->boolean('remember')
+        );
 
         if (! $authenticated) {
             throw ValidationException::withMessages([
