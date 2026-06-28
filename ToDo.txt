@@ -1,10 +1,46 @@
 Al momento l app se ti sei cancellato is_deleted = true e provi a fare login con quella ti manda al log out
 gestire questo caso -> riattivazione? 
 
-Domain customer:
+Roles
+ ├── Role (admin / manager / customer / future roles)
+ └── UserRole (pivot)
+        ├── user_id
+        ├── role_id
+        ├── timestamps
+
 User
  ├── UserInfo
  ├── Company
  ├── Addresses (N)
  ├── Emails (N)
- └── Phones (N)
+ ├── Phones (N)
+ └── Roles (N via pivot)
+        └── Role (N)
+
+
+Esempi del middleware dei ruoli:
+
+Route::middleware(['auth'])->group(function () {
+
+    // SOLO ADMIN
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/dashboard', function () {
+            return 'Admin dashboard';
+        });
+    });
+
+    // ADMIN + MANAGER
+    Route::middleware(['role:admin,manager'])->group(function () {
+        Route::get('/backoffice', function () {
+            return 'Backoffice area';
+        });
+    });
+
+    // SOLO CUSTOMER (area utenti)
+    Route::middleware(['role:customer'])->group(function () {
+        Route::get('/account', function () {
+            return 'User account';
+        });
+    });
+
+});

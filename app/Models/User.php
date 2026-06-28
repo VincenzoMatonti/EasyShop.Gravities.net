@@ -84,6 +84,22 @@ class User extends Authenticatable
         return $this->roles()->where('name', $role)->exists();
     }
 
+    public function hasAnyRole(array $roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->hasRole($role)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles->pluck('name')->toArray();
+    }
+
     public function isAdmin(): bool
     {
         return $this->hasRole('admin');
@@ -97,10 +113,5 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->hasRole('customer');
-    }
-
-    public function getRoles(): array
-    {
-        return $this->roles->pluck('name')->toArray();
     }
 }
