@@ -21,6 +21,19 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 
 class UserInfo extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'name',
+        'surname',
+        'tax_code',
+        'birth_date',
+        'birth_place',
+        'nationality',
+        'gender',
+        'residence',
+        'domicile'
+    ];
+    
     protected function casts(): array
     {
         return [

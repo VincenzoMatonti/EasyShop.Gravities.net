@@ -6,24 +6,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 
+#[Fillable([
+    'user_id',
+    'phone',
+    'is_primary',
+    'is_verified',
+    'is_deleted',
+])]
 
-
-class Email extends Model
+class Phone extends Model
 {
     protected $fillable = [
         'user_id',
-        'email',
+        'phone',
         'is_primary',
+        'is_verified',
         'is_deleted',
-        'verified_at',
     ];
 
     protected function casts(): array
     {
         return [
             'is_primary' => 'boolean',
+            'is_verified' => 'boolean',
             'is_deleted' => 'boolean',
-            'verified_at' => 'datetime',
         ];
     }
 
