@@ -16,75 +16,26 @@ Attualmente l’app gestisce utenti soft-deleted così:
 
 ---
 
-# 🛡️ ROLE MIDDLEWARE (ESEMPI)
-
-```php
-Route::middleware(['auth'])->group(function () {
-
-    // SOLO ADMIN
-    Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/dashboard', fn () => 'Admin dashboard');
-    });
-
-    // ADMIN + MANAGER
-    Route::middleware(['role:admin,manager'])->group(function () {
-        Route::get('/backoffice', fn () => 'Backoffice area');
-    });
-
-    // SOLO CUSTOMER
-    Route::middleware(['role:customer'])->group(function () {
-        Route::get('/account', fn () => 'User account');
-    });
-
-});
-
 
 User
- ├── UserInfo (0..1)
- ├── Roles (N:N via user_role)
- ├── Companies (N:N via user_company)
- ├── CustomerProfiles (1..N)
- ├── Addresses (0..N)
- ├── Emails (0..N)
- └── Phones (0..N)
-
-
- Role
- └── Users (N:N)
-
- user_role
-- user_id
-- role_id
-- timestamps
-
-✔ Permessi applicativi (admin, manager, customer)
-
-Company
- └── Users (N:N via user_company)
-
- user_company
-- user_id
-- company_id
-- role (owner | admin | employee)
-- timestamps
-
-✔ Multi-azienda per utente o multiutente per azienda
+ ├── UserInfo
+ ├── Addresses
+ ├── Emails
+ ├── Phones
+ ├── Roles
+ ├── Companies
+ └── CustomerProfiles
 
 CustomerProfile
-- id
-- user_id (OBBLIGATORIO)
-- company_id (nullable)
-- name
-- type (personal | business)
-- is_default
-- is_deleted
+ ├── User
+ ├── Company (optional)
+ └── Segments (N:N)
 
 Segment
-- id
-- name
+ └── CustomerProfiles (N:N)
 
-Segment
-- id
-- name
+Con questo io considererei il dominio Customer chiuso per la V1.
 
-✔ Classificazione dinamica clienti
+Le evoluzioni future (punti, loyalty, sconti, CRM, marketing, customer tiers, ecc.) potranno agganciarsi a:
+
+CustomerProfile

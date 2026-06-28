@@ -51,6 +51,16 @@ class CustomerProfile extends Model
         return $query->where('type', CustomerProfileType::personal);
     }
 
+    public function isBusiness(): bool
+    {
+        return $this->type === CustomerProfileType::business;
+    }
+
+    public function isPersonal(): bool
+    {
+        return $this->type === CustomerProfileType::personal;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -61,13 +71,8 @@ class CustomerProfile extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function isBusiness(): bool
+    public function segments()
     {
-        return $this->type === CustomerProfileType::business;
-    }
-
-    public function isPersonal(): bool
-    {
-        return $this->type === CustomerProfileType::personal;
+        return $this->belongsToMany(Segment::class);
     }
 }
