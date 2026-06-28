@@ -27,7 +27,7 @@
                 @auth
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center text-nowrap mytextcolor" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-robot ms-1"></i>
+                       Ciao! {{ Auth::user()->name }} <i class="fa-solid fa-robot ms-1"></i>
                     </a>
                     <ul class="dropdown-menu mynavbg">
                         <li>

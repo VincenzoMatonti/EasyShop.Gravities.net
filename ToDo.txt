@@ -1,0 +1,10 @@
+Al momento l app se ti sei cancellato is_deleted = true e provi a fare login con quella ti manda al log out
+gestire questo caso -> riattivazione? 
+
+Domain customer:
+User
+ ├── UserInfo
+ ├── Company
+ ├── Addresses (N)
+ ├── Emails (N)
+ └── Phones (N)
