@@ -1,23 +1,6 @@
 Al momento l app se ti sei cancellato is_deleted = true e provi a fare login con quella ti manda al log out
 gestire questo caso -> riattivazione? 
 
-Roles
- ├── Role (admin / manager / customer / future roles)
- └── UserRole (pivot)
-        ├── user_id
-        ├── role_id
-        ├── timestamps
-
-User
- ├── UserInfo
- ├── Company
- ├── Addresses (N)
- ├── Emails (N)
- ├── Phones (N)
- └── Roles (N via pivot)
-        └── Role (N)
-
-
 Esempi del middleware dei ruoli:
 
 Route::middleware(['auth'])->group(function () {
@@ -44,3 +27,51 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
+Roles
+ ├── Role (admin / manager / customer / future roles)
+ └── UserRole (pivot)
+        ├── user_id
+        ├── role_id
+        ├── timestamps
+
+User
+ ├── UserInfo
+ ├── Company
+ ├── Addresses (N)
+ ├── Emails (N)
+ ├── Phones (N)
+ └── Roles (N via pivot)
+        └── Role (N)
+
+User
+ ├── CustomerProfile (personal)
+ ├── CustomerProfile (work / business)
+
+
+User (obbligatorio)
+ ├── UserInfo (opzionale ma 1 max)
+ ├── Company (opzionale, 0..1)
+ ├── CustomerProfiles (1..N) -- viene creato al primo evento utile, non subito al signup
+ ├── Addresses (0..N)
+ ├── Emails (0..N)
+ └── Phones (0..N)
+
+
+SIGNIFICATO DEL MODELLO:
+
+✔ User
+identità login
+
+✔ UserInfo
+profilo anagrafico esteso (non business-critical)
+
+✔ Company
+solo se utente è business
+
+✔ CustomerProfiles (CORE DEL SISTEMA)
+qui stai modellando:
+    contesto acquisto
+    segmentazione
+    punti / sconti
+    comportamento commerciale
