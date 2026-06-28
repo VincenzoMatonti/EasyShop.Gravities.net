@@ -78,4 +78,29 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    private function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isManager(): bool
+    {
+        return $this->hasRole('manager');
+    }
+
+    public function isCustomer(): bool
+    {
+        return $this->hasRole('customer');
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles->pluck('name')->toArray();
+    }
 }
