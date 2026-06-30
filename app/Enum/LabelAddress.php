@@ -4,8 +4,17 @@ namespace App\Enum;
 
 enum LabelAddress: int
 {
+    // PERSONALI
     case Home = 1;
-    case Work = 2;
-    case Office = 3;
-    case Warehouse = 4;
+    case Shipping = 2;
+    case Billing = 3;
+
+    // AZIENDALI
+    case Office = 10;
+    case Legal = 11;
+    case Warehouse = 12;
+    case Operational = 13;
+
+    // GENERICI
+    case Other = 99;
 }

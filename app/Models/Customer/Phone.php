@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Enum\LabelPhone;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
 class Phone extends Model
 {
     protected $fillable = [
-        'phone',
+        'label',
+        'prefix',
+        'number',
         'is_primary',
         'is_verified',
         'is_deleted',
@@ -20,6 +23,7 @@ class Phone extends Model
     protected function casts(): array
     {
         return [
+            'label' => LabelPhone::class,
             'is_primary' => 'boolean',
             'is_verified' => 'boolean',
             'is_deleted' => 'boolean',
