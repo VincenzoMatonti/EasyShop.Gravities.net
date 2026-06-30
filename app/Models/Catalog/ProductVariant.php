@@ -3,6 +3,7 @@
 namespace App\Models\Catalog;
 
 use App\Enum\Catalog\Currency;
+use App\Models\Inventory\InventoryItem;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductVariant extends Model
@@ -37,5 +38,10 @@ class ProductVariant extends Model
     public function media()
     {
         return $this->hasMany(ProductMedia::class);
+    }
+
+    public function inventoryItem()
+    {
+        return $this->hasOne(InventoryItem::class);
     }
 }
