@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Identity;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Customer\Address;
-use App\Models\Customer\Company;
 use App\Models\Customer\CustomerProfile;
 use App\Models\Customer\Email;
 use App\Models\Customer\Phone;
-use App\Models\Customer\Role;
+use App\Models\Customer\UserCustomerProfile;
 use App\Models\Customer\UserInfo;
+use App\Models\Identity\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -61,29 +61,35 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class);
     }
 
-    public function companies()
-    {
-        return $this->belongsToMany(Company::class);
-    }
-
     public function customerProfiles()
     {
-        return $this->hasMany(CustomerProfile::class);
+        return $this->belongsToMany(CustomerProfile::class)
+                    ->using(UserCustomerProfile::class)
+                    ->withPivot(['role', 'is_default'])
+                    ->withTimestamps();
     }
 
-    public function addresses()
+    public function defaultCustomerProfile()
     {
-        return $this->hasMany(Address::class);
+        return $this->belongsToMany(CustomerProfile::class)
+                    ->wherePivot('is_default', true)
+                    ->withPivot('role', 'is_default')
+                    ->withTimestamps();
     }
 
     public function emails()
     {
-        return $this->hasMany(Email::class);
+        return $this->morphMany(Email::class, 'emailable');
     }
 
     public function phones()
     {
-        return $this->hasMany(Phone::class);
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     public function roles()

@@ -2,18 +2,14 @@
 
 namespace App\Models\Customer;
 
-use App\LabelAddress;
-use App\Models\User;
+use App\Enum\Customer\LabelAddress;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 
 
 class Address extends Model
 {
     protected $fillable = [
-        'user_id',
-        'is_deleted',
         'label',
         'street',
         'number',
@@ -21,19 +17,16 @@ class Address extends Model
         'city',
         'province',
         'country',
-        'is_shipping',
-        'is_billing',
         'is_default',
+        'is_deleted',
     ];
 
     protected function casts(): array
     {
         return [
             'label' => LabelAddress::class,
-            'is_deleted' => 'boolean',
-            'is_shipping' => 'boolean',
-            'is_billing' => 'boolean',
             'is_default' => 'boolean',
+            'is_deleted' => 'boolean',
         ];
     }
 
@@ -42,8 +35,8 @@ class Address extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function user()
+    public function addressable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

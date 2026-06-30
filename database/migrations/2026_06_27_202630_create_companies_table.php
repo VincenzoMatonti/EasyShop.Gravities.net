@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('tax_code',16)->unique()->nullable();
             $table->string('pec',255)->nullable();
             $table->string('sdi_code',7)->nullable();
-            $table->string('legal_address',255)->nullable();
             $table->string('website',255)->nullable();
             $table->timestamps();
         });

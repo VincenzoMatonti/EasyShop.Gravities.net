@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Models\Customer;
+namespace App\Models\Catalog;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Segment extends Model
+class MacroCategory extends Model
 {
     protected $fillable = [
         'name',
+        'slug',
         'is_deleted',
     ];
 
@@ -19,13 +20,13 @@ class Segment extends Model
         ];
     }
 
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_deleted', false);
-    }
-
-    public function customerProfiles()
-    {
-        return $this->belongsToMany(CustomerProfile::class);
     }
 }

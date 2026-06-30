@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Customer;
+namespace App\Models\Identity;
 
-use App\Models\User;
+use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_user', function (Blueprint $table) {
+        Schema::create('user_customer_profile', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles');
+            $table->unsignedBigInteger('customer_profile_id');
+            $table->foreign('customer_profile_id')->references('id')->on('customer_profiles');
+            $table->unsignedTinyInteger('role')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
-            $table->unique(['user_id', 'role_id']);
+            $table->unique(['user_id','customer_profile_id']);
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('user_customer_profile');
     }
 };

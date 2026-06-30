@@ -2,9 +2,8 @@
 
 namespace App\Models\Customer;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+
 
 class Company extends Model
 {
@@ -14,16 +13,26 @@ class Company extends Model
         'tax_code',
         'pec',
         'sdi_code',
-        'legal_address',
         'website'
     ];
-    public function users()
-    {
-        return $this->belongsToMany(User::class);
-    }
 
     public function customerProfiles()
     {
         return $this->hasMany(CustomerProfile::class);
+    }
+
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'emailable');
+    }
+
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 }

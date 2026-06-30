@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_profile_segment', function (Blueprint $table) {
+        Schema::create('customer_profile_customer_segment', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_profile_id');
             $table->foreign('customer_profile_id')->references('id')->on('customer_profiles');
-            $table->unsignedBigInteger('segment_id');
-            $table->foreign('segment_id')->references('id')->on('segments');
+            $table->unsignedBigInteger('customer_segment_id');
+            $table->foreign('customer_segment_id')->references('id')->on('customer_segments');
             $table->timestamps();
         });
     }

@@ -2,23 +2,9 @@
 
 namespace App\Models\Customer;
 
-use App\Gender;
-use App\Models\User;
+use App\Enum\Customer\Gender;
+use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-
-#[Fillable([
-    'user_id',
-    'name',
-    'surname',
-    'tax_code',
-    'birth_date',
-    'birth_place',
-    'nationality',
-    'gender',
-    'residence',
-    'domicile'
-])]
 
 class UserInfo extends Model
 {

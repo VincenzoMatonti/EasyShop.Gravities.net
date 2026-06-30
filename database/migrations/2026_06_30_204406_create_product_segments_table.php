@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('phones', function (Blueprint $table) {
+        Schema::create('product_segments', function (Blueprint $table) {
             $table->id();
-            $table->morphs('phoneable');
-            $table->unsignedTinyInteger('label');
-            $table->string('prefix', 6);
-            $table->string('number', 20);
-            $table->boolean('is_primary')->default(false);
-            $table->boolean('is_verified')->default(false);
+            $table->string('name');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('phones');
+        Schema::dropIfExists('product_segments');
     }
 };

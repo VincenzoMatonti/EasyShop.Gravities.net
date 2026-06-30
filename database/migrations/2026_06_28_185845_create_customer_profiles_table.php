@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('customer_profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->string('name');
-            $table->integer('type');
-            $table->boolean('is_default')->default(false);
+            $table->unsignedTinyInteger('type');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });

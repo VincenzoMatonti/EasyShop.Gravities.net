@@ -2,28 +2,19 @@
 
 namespace App\Models\Customer;
 
-use App\Enum\Customer\LabelPhone;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
-
-class Phone extends Model
+class CustomerSegment extends Model
 {
     protected $fillable = [
-        'label',
-        'prefix',
-        'number',
-        'is_primary',
-        'is_verified',
+        'name',
         'is_deleted',
     ];
 
     protected function casts(): array
     {
         return [
-            'label' => LabelPhone::class,
-            'is_primary' => 'boolean',
-            'is_verified' => 'boolean',
             'is_deleted' => 'boolean',
         ];
     }
@@ -33,8 +24,8 @@ class Phone extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function phoneable()
+    public function customerProfiles()
     {
-        return $this->morphTo();
+        return $this->belongsToMany(CustomerProfile::class);
     }
 }

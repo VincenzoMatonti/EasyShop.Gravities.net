@@ -2,19 +2,17 @@
 
 namespace App\Models\Customer;
 
-use App\CustomerProfileType;
-use App\Models\User;
+use App\Enum\Customer\CustomerProfileType;
+use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerProfile extends Model
 {
     protected $fillable = [
-        'user_id',
         'company_id',
         'name',
         'type',
-        'is_default',
         'is_deleted',
     ];
 
@@ -22,34 +20,41 @@ class CustomerProfile extends Model
     {
         return [
             'type' => CustomerProfileType::class,
-            'is_default' => 'boolean',
             'is_deleted' => 'boolean',
         ];
     }
 
-    public function scopeActive(Builder $query): Builder
+    public function users()
     {
-        return $query->where('is_deleted', false);
+        return $this->belongsToMany(User::class)
+                    ->using(UserCustomerProfile::class)
+                    ->withPivot(['role', 'is_default'])
+                    ->withTimestamps();
     }
 
-    public function scopeDeleted(Builder $query): Builder
+    public function company()
     {
-        return $query->where('is_deleted', true);
+        return $this->belongsTo(Company::class);
     }
 
-    public function scopeDefault(Builder $query): Builder
+    public function segments()
     {
-        return $query->where('is_default', true);
+        return $this->belongsToMany(CustomerSegment::class);
     }
 
-    public function scopeBusiness(Builder $query): Builder
+    public function emails()
     {
-        return $query->where('type', CustomerProfileType::business);
+        return $this->morphMany(Email::class, 'emailable');
     }
 
-    public function scopePersonal(Builder $query): Builder
+    public function phones()
     {
-        return $query->where('type', CustomerProfileType::personal);
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     public function isBusiness(): bool
@@ -62,18 +67,18 @@ class CustomerProfile extends Model
         return $this->type === CustomerProfileType::personal;
     }
 
-    public function user()
+    public function scopeDeleted(Builder $query): Builder
     {
-        return $this->belongsTo(User::class);
+        return $query->where('is_deleted', true);
     }
 
-    public function company()
+    public function scopeBusiness(Builder $query): Builder
     {
-        return $this->belongsTo(Company::class);
+        return $query->where('type', CustomerProfileType::business);
     }
 
-    public function segments()
+    public function scopePersonal(Builder $query): Builder
     {
-        return $this->belongsToMany(Segment::class);
+        return $query->where('type', CustomerProfileType::personal);
     }
 }
