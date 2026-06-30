@@ -2,7 +2,7 @@
 
 namespace App\Models\Customer;
 
-use App\LabelAddress;
+use App\Enum\LabelAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
