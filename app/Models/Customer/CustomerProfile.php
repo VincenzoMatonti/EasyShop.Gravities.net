@@ -2,7 +2,7 @@
 
 namespace App\Models\Customer;
 
-use App\Enum\CustomerProfileType;
+use App\Enum\Customer\CustomerProfileType;
 use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

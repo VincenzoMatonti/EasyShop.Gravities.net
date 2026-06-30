@@ -2,9 +2,8 @@
 
 namespace App\Models\Customer;
 
-use App\Models\Identity;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+
 
 class Company extends Model
 {

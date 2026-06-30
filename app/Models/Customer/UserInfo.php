@@ -2,7 +2,7 @@
 
 namespace App\Models\Customer;
 
-use App\Enum\Gender;
+use App\Enum\Customer\Gender;
 use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Model;
 

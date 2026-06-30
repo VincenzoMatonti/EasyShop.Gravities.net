@@ -3,7 +3,7 @@
 namespace App\Models\Customer;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use App\Enum\RoleCustomerProfile;
+use App\Enum\Customer\RoleCustomerProfile;
 
 class UserCustomerProfile extends  Pivot
 {
