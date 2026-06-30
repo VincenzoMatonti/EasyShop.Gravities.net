@@ -26,10 +26,10 @@ class Category extends Model
         return $this->belongsTo(MacroCategory::class);
     }
 
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class);
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
     public function scopeActive(Builder $query): Builder
     {
