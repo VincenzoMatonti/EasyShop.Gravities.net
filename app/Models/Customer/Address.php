@@ -3,16 +3,13 @@
 namespace App\Models\Customer;
 
 use App\LabelAddress;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 
 
 class Address extends Model
 {
     protected $fillable = [
-        'is_deleted',
         'label',
         'street',
         'number',
@@ -20,19 +17,16 @@ class Address extends Model
         'city',
         'province',
         'country',
-        'is_shipping',
-        'is_billing',
         'is_default',
+        'is_deleted',
     ];
 
     protected function casts(): array
     {
         return [
             'label' => LabelAddress::class,
-            'is_deleted' => 'boolean',
-            'is_shipping' => 'boolean',
-            'is_billing' => 'boolean',
             'is_default' => 'boolean',
+            'is_deleted' => 'boolean',
         ];
     }
 
@@ -41,7 +35,7 @@ class Address extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function emailable()
+    public function addressable()
     {
         return $this->morphTo();
     }

@@ -31,7 +31,7 @@ class Phone extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function emailable()
+    public function phoneable()
     {
         return $this->morphTo();
     }
