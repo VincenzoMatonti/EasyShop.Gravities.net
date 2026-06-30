@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 class Email extends Model
 {
     protected $fillable = [
+        'label',
         'email',
         'is_primary',
         'is_deleted',

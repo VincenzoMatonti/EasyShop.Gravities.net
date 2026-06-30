@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
             $table->morphs('emailable');
+            $table->unsignedTinyInteger('label');
             $table->string('email', 255);
             $table->boolean('is_primary')->default(false);
             $table->boolean('is_deleted')->default(false);

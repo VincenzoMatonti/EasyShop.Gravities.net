@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
             $table->morphs('phoneable');
-            $table->string('label', 20);
+            $table->unsignedTinyInteger('label');
             $table->string('prefix', 6);
             $table->string('number', 20);
             $table->boolean('is_primary')->default(false);
