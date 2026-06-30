@@ -39,7 +39,7 @@ class CustomerProfile extends Model
 
     public function segments()
     {
-        return $this->belongsToMany(Segment::class);
+        return $this->belongsToMany(CustomerSegment::class);
     }
 
     public function emails()
