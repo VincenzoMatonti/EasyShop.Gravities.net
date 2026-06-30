@@ -2,11 +2,10 @@
 
 namespace App\Models\Customer;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use App\Enum\RoleCustomerProfile;
 
-class UserCustomerProfile extends Model
+class UserCustomerProfile extends  Pivot
 {
     protected $table = 'user_customer_profile';
 

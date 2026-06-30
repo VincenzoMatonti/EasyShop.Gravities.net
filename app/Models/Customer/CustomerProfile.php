@@ -20,7 +20,6 @@ class CustomerProfile extends Model
     {
         return [
             'type' => CustomerProfileType::class,
-            'is_default' => 'boolean',
             'is_deleted' => 'boolean',
         ];
     }
@@ -71,11 +70,6 @@ class CustomerProfile extends Model
     public function scopeDeleted(Builder $query): Builder
     {
         return $query->where('is_deleted', true);
-    }
-
-    public function scopeDefault(Builder $query): Builder
-    {
-        return $query->where('is_default', true);
     }
 
     public function scopeBusiness(Builder $query): Builder

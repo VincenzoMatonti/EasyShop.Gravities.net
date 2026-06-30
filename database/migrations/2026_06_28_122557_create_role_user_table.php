@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamps();
+            $table->unique(['user_id', 'role_id']);
         });
     }
 

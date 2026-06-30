@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->string('name');
-            $table->integer('type');
+            $table->unsignedTinyInteger('type');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });

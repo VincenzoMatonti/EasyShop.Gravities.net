@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Enum\LabelEmail;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -22,6 +23,7 @@ class Email extends Model
     protected function casts(): array
     {
         return [
+            'label' => LabelEmail::class,
             'is_primary' => 'boolean',
             'is_deleted' => 'boolean',
             'verified_at' => 'datetime',

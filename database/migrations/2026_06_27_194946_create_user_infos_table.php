@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('residence',50)->nullable();
             $table->string('domicile',50)->nullable();
             $table->timestamps();
+            $table->unique('user_id');
         });
     }
 

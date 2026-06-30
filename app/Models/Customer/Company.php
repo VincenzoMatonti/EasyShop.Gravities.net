@@ -14,7 +14,6 @@ class Company extends Model
         'tax_code',
         'pec',
         'sdi_code',
-        'legal_address',
         'website'
     ];
 
