@@ -36,6 +36,11 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    public function segments()
+    {
+        return $this->belongsToMany(ProductSegment::class);
+    }
+
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
