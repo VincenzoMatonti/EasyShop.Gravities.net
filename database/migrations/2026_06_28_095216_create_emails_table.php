@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->morphs('emailable');
             $table->string('email', 255);
             $table->boolean('is_primary')->default(false);
             $table->boolean('is_deleted')->default(false);

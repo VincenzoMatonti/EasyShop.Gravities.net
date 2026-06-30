@@ -10,6 +10,7 @@ use App\Models\Customer\CustomerProfile;
 use App\Models\Customer\Email;
 use App\Models\Customer\Phone;
 use App\Models\Customer\Role;
+use App\Models\Customer\UserCustomerProfile;
 use App\Models\Customer\UserInfo;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,22 +64,33 @@ class User extends Authenticatable
 
     public function customerProfiles()
     {
-        return $this->hasMany(CustomerProfile::class);
+        return $this->belongsToMany(CustomerProfile::class)
+                    ->using(UserCustomerProfile::class)
+                    ->withPivot(['role', 'is_default'])
+                    ->withTimestamps();
     }
 
-    public function addresses()
+    public function defaultCustomerProfile()
     {
-        return $this->hasMany(Address::class);
+        return $this->belongsToMany(CustomerProfile::class)
+                    ->wherePivot('is_default', true)
+                    ->withPivot('role', 'is_default')
+                    ->withTimestamps();
     }
 
     public function emails()
     {
-        return $this->hasMany(Email::class);
+        return $this->morphMany(Email::class, 'emailable');
     }
 
     public function phones()
     {
-        return $this->hasMany(Phone::class);
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     public function roles()

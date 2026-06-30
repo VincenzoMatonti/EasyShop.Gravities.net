@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('label')->nullable(); // Casa, Lavoro, Magazzino...
+            $table->morphs('addressable');
             $table->string('name', 50);
             $table->string('surname', 50);
             $table->string('street', 100);
@@ -27,7 +26,6 @@ return new class extends Migration
             $table->boolean('is_shipping')->default(true);
             $table->boolean('is_billing')->default(false);
             $table->boolean('is_default')->default(false);
-
             $table->timestamps();
         });
     }

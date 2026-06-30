@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->morphs('phoneable');
             $table->string('phone', 20);
             $table->boolean('is_primary')->default(false);
             $table->boolean('is_verified')->default(false);

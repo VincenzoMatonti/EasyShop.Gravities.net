@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 class Address extends Model
 {
     protected $fillable = [
-        'user_id',
         'is_deleted',
         'label',
         'street',
@@ -42,8 +41,8 @@ class Address extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function user()
+    public function emailable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

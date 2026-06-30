@@ -22,4 +22,19 @@ class Company extends Model
     {
         return $this->hasMany(CustomerProfile::class);
     }
+
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'emailable');
+    }
+
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
 }

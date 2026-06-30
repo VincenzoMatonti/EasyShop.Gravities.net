@@ -7,18 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 
-#[Fillable([
-    'user_id',
-    'phone',
-    'is_primary',
-    'is_verified',
-    'is_deleted',
-])]
 
 class Phone extends Model
 {
     protected $fillable = [
-        'user_id',
         'phone',
         'is_primary',
         'is_verified',
@@ -39,8 +31,8 @@ class Phone extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function user()
+    public function emailable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

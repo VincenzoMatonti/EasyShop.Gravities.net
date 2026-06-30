@@ -10,11 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerProfile extends Model
 {
     protected $fillable = [
-        'user_id',
         'company_id',
         'name',
         'type',
-        'is_default',
         'is_deleted',
     ];
 
@@ -27,9 +25,47 @@ class CustomerProfile extends Model
         ];
     }
 
-    public function scopeActive(Builder $query): Builder
+    public function users()
     {
-        return $query->where('is_deleted', false);
+        return $this->belongsToMany(User::class)
+                    ->using(UserCustomerProfile::class)
+                    ->withPivot(['role', 'is_default'])
+                    ->withTimestamps();
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function segments()
+    {
+        return $this->belongsToMany(Segment::class);
+    }
+
+    public function emails()
+    {
+        return $this->morphMany(Email::class, 'emailable');
+    }
+
+    public function phones()
+    {
+        return $this->morphMany(Phone::class, 'phoneable');
+    }
+
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function isBusiness(): bool
+    {
+        return $this->type === CustomerProfileType::business;
+    }
+
+    public function isPersonal(): bool
+    {
+        return $this->type === CustomerProfileType::personal;
     }
 
     public function scopeDeleted(Builder $query): Builder
@@ -50,30 +86,5 @@ class CustomerProfile extends Model
     public function scopePersonal(Builder $query): Builder
     {
         return $query->where('type', CustomerProfileType::personal);
-    }
-
-    public function isBusiness(): bool
-    {
-        return $this->type === CustomerProfileType::business;
-    }
-
-    public function isPersonal(): bool
-    {
-        return $this->type === CustomerProfileType::personal;
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    public function segments()
-    {
-        return $this->belongsToMany(Segment::class);
     }
 }

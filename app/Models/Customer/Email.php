@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 class Email extends Model
 {
     protected $fillable = [
-        'user_id',
         'email',
         'is_primary',
         'is_deleted',
@@ -33,8 +32,8 @@ class Email extends Model
         return $query->where('is_deleted', false);
     }
 
-    public function user()
+    public function emailable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }
