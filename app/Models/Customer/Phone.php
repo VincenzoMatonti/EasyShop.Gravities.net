@@ -3,9 +3,7 @@
 namespace App\Models\Customer;
 
 use App\Enum\LabelPhone;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 
 

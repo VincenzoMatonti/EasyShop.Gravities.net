@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Identity;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Customer\Address;
-use App\Models\Customer\Company;
 use App\Models\Customer\CustomerProfile;
 use App\Models\Customer\Email;
 use App\Models\Customer\Phone;

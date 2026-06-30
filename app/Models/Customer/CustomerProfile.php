@@ -3,7 +3,7 @@
 namespace App\Models\Customer;
 
 use App\Enum\CustomerProfileType;
-use App\Models\User;
+use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
