@@ -3,6 +3,7 @@
 namespace App\Models\Catalog;
 
 use App\Enum\Catalog\Currency;
+use App\Models\Cart\CartItem;
 use App\Models\Inventory\InventoryItem;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,5 +44,10 @@ class ProductVariant extends Model
     public function inventoryItem()
     {
         return $this->hasOne(InventoryItem::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
     }
 }
