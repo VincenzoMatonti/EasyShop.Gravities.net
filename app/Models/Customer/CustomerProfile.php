@@ -3,6 +3,7 @@
 namespace App\Models\Customer;
 
 use App\Enum\Customer\CustomerProfileType;
+use App\Models\Cart\Cart;
 use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,11 @@ class CustomerProfile extends Model
     public function segments()
     {
         return $this->belongsToMany(CustomerSegment::class);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 
     public function emails()
