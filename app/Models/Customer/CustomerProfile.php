@@ -5,6 +5,7 @@ namespace App\Models\Customer;
 use App\Enum\Customer\CustomerProfileType;
 use App\Models\Cart\Cart;
 use App\Models\Identity\User;
+use App\Models\Order\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -46,6 +47,11 @@ class CustomerProfile extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function emails()
