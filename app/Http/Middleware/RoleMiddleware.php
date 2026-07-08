@@ -17,17 +17,13 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
+        /** @var User $user */
         $user = Auth::user();
 
-        if (!$user instanceof User) {
-            abort(401);
-        }
-
-        $roles = explode(',', ...$roles);
-
         if (!$user->hasAnyRole($roles)) {
-            abort(403);
+            return redirect()->route($user->homeRoute());
         }
+
         return $next($request);
     }
 }

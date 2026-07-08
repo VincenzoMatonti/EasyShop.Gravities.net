@@ -4,6 +4,7 @@ namespace App\Models\Identity;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enum\Identity\IdentityRole;
 use App\Models\Customer\Address;
 use App\Models\Customer\CustomerProfile;
 use App\Models\Customer\Email;
@@ -56,11 +57,6 @@ class User extends Authenticatable
         return $query->where('is_deleted', false);
     }
 
-    public function userInfo()
-    {
-        return $this->hasOne(UserInfo::class);
-    }
-
     public function customerProfiles()
     {
         return $this->belongsToMany(CustomerProfile::class)
@@ -75,6 +71,11 @@ class User extends Authenticatable
                     ->wherePivot('is_default', true)
                     ->withPivot('role', 'is_default')
                     ->withTimestamps();
+    }
+
+    public function userInfo()
+    {
+        return $this->hasOne(UserInfo::class);
     }
 
     public function emails()
@@ -97,39 +98,46 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    private function hasRole(string $role): bool
+    public function hasRole(IdentityRole $role): bool
     {
-        return $this->roles()->where('name', $role)->exists();
+        return $this->roles()->where('name', $role->value)->exists();
     }
 
     public function hasAnyRole(array $roles): bool
     {
-        foreach ($roles as $role) {
-            if ($this->hasRole($role)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->roles()->whereIn('name', $roles)->exists();
     }
 
     public function getRoles(): array
     {
-        return $this->roles->pluck('name')->toArray();
+        return $this->roles->pluck('name')->map(fn (IdentityRole $role) => $role->value)->toArray();
     }
 
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin');
+        return $this->hasRole(IdentityRole::ADMIN);
     }
 
     public function isManager(): bool
     {
-        return $this->hasRole('manager');
+        return $this->hasRole(IdentityRole::MANAGER);
     }
 
     public function isCustomer(): bool
     {
-        return $this->hasRole('customer');
+        return $this->hasRole(IdentityRole::CUSTOMER);
+    }
+    public function homeRoute(): string
+    {
+        return match (true) {
+
+            $this->isAdmin() => 'admin.index',
+
+            $this->isManager() => 'manager.index',
+
+            $this->isCustomer() => 'customer.index',
+
+            default => 'home.index',
+        };
     }
 }

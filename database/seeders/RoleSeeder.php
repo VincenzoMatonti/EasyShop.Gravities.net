@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer\Role;
+use App\Enum\Identity\IdentityRole;
+use App\Models\Identity\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,16 +14,10 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate([
-            'name' => 'admin',
-        ]);
-
-        Role::firstOrCreate([
-            'name' => 'manager',
-        ]);
-
-        Role::firstOrCreate([
-            'name' => 'customer',
-        ]);
+        foreach (IdentityRole::cases() as $role) {
+            Role::firstOrCreate([
+                'name' => $role->value,
+            ]);
+        }
     }
 }
