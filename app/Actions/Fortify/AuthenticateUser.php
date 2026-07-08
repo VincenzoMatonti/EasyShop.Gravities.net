@@ -2,33 +2,26 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Identity\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Http\Requests\LoginRequest;
 
 class AuthenticateUser
 {
-    public function __invoke(LoginRequest $loginRequest): void
+    public function __invoke(LoginRequest $loginRequest): ?User
     {
-        $authenticated = Auth::attempt(
-            $loginRequest->only('email', 'password'),
-            $loginRequest->boolean('remember')
-        );
+        $user = User::active()->where('email', $loginRequest->email)->first();
 
-        if (! $authenticated) {
-            throw ValidationException::withMessages([
-                'email' => __('Credenziali non valide.'),
-            ]);
+        if (!$user) {
+            return null;
         }
 
-        $user = Auth::user();
-
-        if ($user && $user->is_deleted) {
-            Auth::logout();
-
-            throw ValidationException::withMessages([
-                'email' => __('Account disattivato.'),
-            ]);
+        if (!Hash::check($loginRequest->password, $user->password)) {
+            return null;
         }
+
+        return $user;
     }
 }

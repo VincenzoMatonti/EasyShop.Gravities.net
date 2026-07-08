@@ -3,6 +3,8 @@
 namespace App\Actions\Fortify;
 
 use App\Models\Identity\User;
+use App\Enum\Identity\IdentityRole;
+use App\Models\Identity\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -23,7 +25,6 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -34,10 +35,15 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
+         $user = User::create([
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
+        $role = Role::where('name', IdentityRole::CUSTOMER->value)->firstOrFail();
+
+        $user->roles()->syncWithoutDetaching([$role->id]);
+
+        return $user;
     }
 }
