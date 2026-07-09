@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Actions\Customer\SwitchCustomerProfileAction;
 use App\Http\Controllers\Controller;
 use App\Models\Identity\User;
-use App\Services\Customer\CustomerContextService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,19 +26,13 @@ class CustomerProfileController extends Controller
     }
 
 
-    public function switch(Request $request, CustomerContextService $context)
+    public function switch(Request $request, SwitchCustomerProfileAction $action)
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $customerProfileId = $request->integer('customer_profile_id');
+        $action->execute($user,$request->integer('customer_profile_id'));
 
-        if (!$user->hasCustomerProfile($customerProfileId)) {
-            abort(403);
-        }
-
-        $context->setById($customerProfileId);
-
-        return redirect()->route('customer.dashboard');
+        return redirect()->route('customer.index');
     }
 }
