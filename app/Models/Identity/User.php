@@ -59,11 +59,12 @@ class User extends Authenticatable
 
     public function customerProfiles()
     {
-        return $this->belongsToMany(CustomerProfile::class)
+        return $this->belongsToMany(CustomerProfile::class,'user_customer_profile')
                     ->using(UserCustomerProfile::class)
                     ->withPivot(['role', 'is_default'])
                     ->withTimestamps();
     }
+    
     public function activeCustomerProfiles()
     {
         return $this->customerProfiles()->where('customer_profiles.is_deleted', false);

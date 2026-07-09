@@ -28,7 +28,7 @@ class CustomerProfile extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)
+        return $this->belongsToMany(User::class, 'user_customer_profile')
                     ->using(UserCustomerProfile::class)
                     ->withPivot(['role', 'is_default'])
                     ->withTimestamps();
