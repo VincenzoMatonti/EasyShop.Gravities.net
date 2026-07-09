@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureActiveCustomerProfile;
-use App\Http\Middleware\EnsureCustomerProfileExists;
+use App\Http\Middleware\EnsureActiveCustomerProfileExists;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => RoleMiddleware::class,
-            'customer.profile.exists' => EnsureCustomerProfileExists::class,
+            'customer.profile.exists' => EnsureActiveCustomerProfileExists::class,
             'customer.profile.active' => EnsureActiveCustomerProfile::class,
         ]);
     })

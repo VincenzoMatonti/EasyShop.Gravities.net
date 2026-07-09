@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Identity\User;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureCustomerProfileExists
+class EnsureActiveCustomerProfileExists
 {
     /**
      * Handle an incoming request.
