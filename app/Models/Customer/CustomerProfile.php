@@ -84,6 +84,11 @@ class CustomerProfile extends Model
         return $query->where('is_deleted', true);
     }
 
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_deleted', false);
+    }
+
     public function scopeBusiness(Builder $query): Builder
     {
         return $query->where('type', CustomerProfileType::business);
