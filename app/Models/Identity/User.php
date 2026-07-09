@@ -127,6 +127,7 @@ class User extends Authenticatable
     {
         return $this->hasRole(IdentityRole::CUSTOMER);
     }
+    
     public function homeRoute(): string
     {
         return match (true) {
