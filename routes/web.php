@@ -9,33 +9,38 @@ use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
-// rotte pubbliche
+
+/// ========================
+// PUBLIC
+// ========================
 Route::get('/', [PublicController::class, 'index'])->name('home.index');
 
-// rotte customer
-Route::middleware([
-    'auth',
-    'role:' . IdentityRole::CUSTOMER->value,
-])
-    ->prefix('customer/profile')
-    ->group(function () {
-        Route::get('/create', [CustomerProfileController::class, 'create'])->name('customer.profile.create');
-        Route::get('/select', [CustomerProfileController::class, 'select'])->name('customer.profile.select');
-    });
 
+// ========================
+// CUSTOMER PROFILE
+// ========================
 Route::middleware([
     'auth',
     'role:' . IdentityRole::CUSTOMER->value,
-    'customer.profile.exists',
-    'customer.profile.active',
-])
-    ->prefix('customer')
-    ->group(function () {
-        Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+])->prefix('customer')->group(function () {
+    // Entry point customer
+    Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
+    // Gestione profili
+    Route::get('/profile/create', [CustomerProfileController::class, 'create'])->name('customer.profile.create');
+    Route::get('/profile/select', [CustomerProfileController::class, 'select'])->name('customer.profile.select');
+    Route::post('/profile/switch', [CustomerProfileController::class, 'switch'])->name('customer.profile.switch');
+    // Area con contesto customer attivo
+    Route::middleware([
+        'customer.profile.exists',
+        'customer.profile.active',
+    ])->group(function () {
         Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
     });
+});
 
-// rotte manager
+// ========================
+// MANAGER
+// ========================
 Route::middleware([
     'auth',
     'role:' . IdentityRole::MANAGER->value
@@ -43,7 +48,9 @@ Route::middleware([
     Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
 });
 
-// rotte admin
+// ========================
+// ADMIN
+// ========================
 Route::middleware([
     'auth',
     'role:' . IdentityRole::ADMIN->value
