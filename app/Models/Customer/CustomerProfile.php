@@ -28,7 +28,7 @@ class CustomerProfile extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class)
+        return $this->belongsToMany(User::class, 'user_customer_profile')
                     ->using(UserCustomerProfile::class)
                     ->withPivot(['role', 'is_default'])
                     ->withTimestamps();
@@ -82,6 +82,11 @@ class CustomerProfile extends Model
     public function scopeDeleted(Builder $query): Builder
     {
         return $query->where('is_deleted', true);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_deleted', false);
     }
 
     public function scopeBusiness(Builder $query): Builder

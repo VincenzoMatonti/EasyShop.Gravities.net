@@ -59,18 +59,45 @@ class User extends Authenticatable
 
     public function customerProfiles()
     {
-        return $this->belongsToMany(CustomerProfile::class)
+        return $this->belongsToMany(CustomerProfile::class,'user_customer_profile')
                     ->using(UserCustomerProfile::class)
                     ->withPivot(['role', 'is_default'])
                     ->withTimestamps();
     }
+    
+    public function activeCustomerProfiles()
+    {
+        return $this->customerProfiles()->where('customer_profiles.is_deleted', false);
+    }
 
     public function defaultCustomerProfile()
     {
-        return $this->belongsToMany(CustomerProfile::class)
-                    ->wherePivot('is_default', true)
-                    ->withPivot('role', 'is_default')
-                    ->withTimestamps();
+        return $this->activeCustomerProfiles()->wherePivot('is_default', true);
+    }
+
+    public function hasCustomerProfile(int $customerProfileId): bool
+    {
+        return $this->activeCustomerProfiles()->whereKey($customerProfileId)->exists();
+    }
+
+    public function hasActiveCustomerProfiles(): bool
+    {
+        return $this->activeCustomerProfiles()->exists();
+    }
+
+    public function getActiveCustomerProfiles()
+    {
+        return $this->activeCustomerProfiles()->get();
+    }
+
+    public function hasDefaultCustomerProfile(): bool
+    {
+        return $this->defaultCustomerProfile()->exists();
+    }
+
+    public function getDefaultCustomerProfile(): ?CustomerProfile
+    {
+        return $this->defaultCustomerProfile()->first();
     }
 
     public function userInfo()
