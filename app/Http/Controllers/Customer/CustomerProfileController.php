@@ -33,6 +33,6 @@ class CustomerProfileController extends Controller
 
         $action->execute($user,$request->integer('customer_profile_id'));
 
-        return redirect()->route('customer.index');
+        return redirect()->route('customer.dashboard');
     }
 }
