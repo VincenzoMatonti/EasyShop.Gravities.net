@@ -43,8 +43,8 @@ Route::middleware([
 Route::middleware([
     'auth',
     'role:' . IdentityRole::MANAGER->value
-])->group(function () {
-    Route::get('/manager', [ManagerController::class, 'index'])->name('manager.index');
+])->prefix('manager')->group(function () {
+    Route::get('/', [ManagerController::class, 'index'])->name('manager.index');
 });
 
 // ========================
@@ -53,6 +53,6 @@ Route::middleware([
 Route::middleware([
     'auth',
     'role:' . IdentityRole::ADMIN->value
-])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 });
