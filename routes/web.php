@@ -28,6 +28,7 @@ Route::middleware([
     // Gestione profili
     Route::get('/profile/create', [CustomerProfileController::class, 'create'])->name('customer.profile.create');
     Route::get('/profile/select', [CustomerProfileController::class, 'select'])->name('customer.profile.select');
+    Route::post('/profile/store', [CustomerProfileController::class, 'store'])->name('customer.profile.store');
     // Area con contesto customer attivo
     Route::middleware([
         'customer.profile.exists',
