@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Customer;
 
 use App\Actions\Customer\CreatePersonalCustomerProfileAction;
 use App\Actions\Customer\SwitchCustomerProfileAction;
+use App\Queries\Customer\GetActiveCustomerProfilesQuery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CreatePersonalCustomerProfileRequest;
+use App\Http\Requests\Customer\SwitchCustomerProfileRequest;
 use Illuminate\Http\Request;
 
 class CustomerProfileController extends Controller
@@ -22,15 +24,15 @@ class CustomerProfileController extends Controller
         return redirect()->route('customer.index');
     }
 
-    public function select()
+    public function select(GetActiveCustomerProfilesQuery $query)
     {
-        $profiles = $this->user()->getActiveCustomerProfiles();
+        $profiles = $query->execute($this->user());
 
         return view('customer.profile.select', compact('profiles'));
     }
 
 
-    public function switch(Request $request, SwitchCustomerProfileAction $action)
+    public function switch(SwitchCustomerProfileRequest $request, SwitchCustomerProfileAction $action)
     {
         $action->execute($this->user(), $request->integer('customer_profile_id'));
 
