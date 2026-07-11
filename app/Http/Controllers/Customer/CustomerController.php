@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Queries\Customer\GetCustomerEntryStateQuery;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(GetCustomerEntryStateQuery $query)
     {
-        return view('customer.index');
+        $state = $query->execute($this->user());
+
+        return view('customer.index', compact('state'));
     }
 }
