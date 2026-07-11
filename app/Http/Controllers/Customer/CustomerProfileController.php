@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Actions\Customer\CreatePersonalCustomerProfileAction;
 use App\Actions\Customer\SwitchCustomerProfileAction;
 use App\Http\Controllers\Controller;
-use App\Models\Identity\User;
+use App\Http\Requests\Customer\CreatePersonalCustomerProfileRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CustomerProfileController extends Controller
 {
@@ -15,12 +15,16 @@ class CustomerProfileController extends Controller
         return view('customer.profile.create');
     }
 
+    public function store(CreatePersonalCustomerProfileRequest $request, CreatePersonalCustomerProfileAction $action)
+    {
+        $action->execute($request->dto($this->user()));
+
+        return redirect()->route('customer.index');
+    }
+
     public function select()
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        $profiles = $user->getActiveCustomerProfiles();
+        $profiles = $this->user()->getActiveCustomerProfiles();
 
         return view('customer.profile.select', compact('profiles'));
     }
@@ -28,10 +32,7 @@ class CustomerProfileController extends Controller
 
     public function switch(Request $request, SwitchCustomerProfileAction $action)
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        $action->execute($user,$request->integer('customer_profile_id'));
+        $action->execute($this->user(), $request->integer('customer_profile_id'));
 
         return redirect()->route('customer.index');
     }

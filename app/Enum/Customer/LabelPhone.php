@@ -7,6 +7,7 @@ enum LabelPhone: int
     // PERSONALI
     case Mobile = 1;
     case Home = 2;
+    case Personal = 3;
 
     // BUSINESS
     case Office = 10;
