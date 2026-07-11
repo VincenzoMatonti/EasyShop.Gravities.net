@@ -24,4 +24,18 @@ class CustomerEntryViewModel
     {
         return $this->hasProfiles;
     }
+
+    public function profileLabel(): string
+    {
+        return match (true) {
+            !$this->hasProfiles => 'Nessun profilo creato',
+            $this->profilesCount === 1 => '1 profilo disponibile',
+            default => "{$this->profilesCount} profili disponibili",
+        };
+    }
+
+    public function createProfileLabel(): string
+    {
+        return $this->hasProfiles ? 'Crea nuovo profilo' : 'Crea profilo';
+    }
 }
