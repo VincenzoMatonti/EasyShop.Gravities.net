@@ -34,7 +34,7 @@ class CustomerProfileController extends Controller
 
     public function switch(SwitchCustomerProfileRequest $request, SwitchCustomerProfileAction $action)
     {
-        $action->execute($this->user(), $request->integer('customer_profile_id'));
+        $action->execute($request->dto($this->user()));
 
         return redirect()->route('customer.index');
     }

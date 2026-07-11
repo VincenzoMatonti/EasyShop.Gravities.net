@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Customer;
 
+use App\Dtos\Customer\SwitchCustomerProfileData;
+use App\Models\Identity\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SwitchCustomerProfileRequest extends FormRequest
@@ -13,17 +15,14 @@ class SwitchCustomerProfileRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'customer_profile_id' => [
-                'required',
-                'integer',
-                'exists:customer_profiles,id',
-            ],
-        ];
+        return ['customer_profile_id' => ['required', 'integer',],];
     }
 
-    public function customerProfileId(): int
+    public function dto(User $user): SwitchCustomerProfileData
     {
-        return $this->integer('customer_profile_id');
+        return new SwitchCustomerProfileData(
+            user: $user,
+            customerProfileId: $this->integer('customer_profile_id'),
+        );
     }
 }
