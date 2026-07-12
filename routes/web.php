@@ -39,6 +39,7 @@ Route::middleware([
     Route::middleware([
         'customer.profile.exists',
         'customer.profile.active',
+        'customer.profile.owner',
     ])->group(function () {
         Route::middleware([
             'customer.profile.type:' . CustomerProfileType::personal->name,
