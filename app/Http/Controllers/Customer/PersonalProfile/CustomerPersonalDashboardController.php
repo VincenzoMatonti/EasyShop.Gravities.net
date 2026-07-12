@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer\PersonalProfile;
 
 use App\Http\Controllers\Controller;
+use App\Queries\Customer\GetPersonalAddressesQuery;
 use App\Queries\Customer\GetPersonalProfileInfoQuery;
 
 class CustomerPersonalDashboardController extends Controller
@@ -18,8 +19,9 @@ class CustomerPersonalDashboardController extends Controller
         return view('customer.personal-dashboard.show-personal-info',compact('profile'));
     }
 
-    public function show_personal_addresses()
+    public function show_personal_addresses(GetPersonalAddressesQuery $query)
     {
-        return view('customer.personal-dashboard.show-personal-addresses');
+        $addresses = $query->execute();
+        return view('customer.personal-dashboard.show-personal-addresses', compact('addresses'));
     }
 }
