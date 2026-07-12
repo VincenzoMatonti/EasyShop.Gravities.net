@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 class CustomerDashboardController extends Controller
 {
-    public function index()
+    public function index_profile()
     {
-        return view('customer.dashboard.index');
+        return view('customer.dashboard.index-personal-profile');
     }
 }

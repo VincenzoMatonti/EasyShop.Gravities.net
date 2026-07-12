@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Customer\CustomerProfileType;
 use App\Enum\Identity\IdentityRole;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Customer\CustomerController;
@@ -39,7 +40,11 @@ Route::middleware([
         'customer.profile.exists',
         'customer.profile.active',
     ])->group(function () {
-        Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
+        Route::middleware([
+            'customer.profile.type:' . CustomerProfileType::personal->name,
+        ])->group(function () {
+            Route::get('/dashboard/personal/profile', [CustomerDashboardController::class, 'index_profile'])->name('customer.dashboard.personal');
+        });
     });
 });
 

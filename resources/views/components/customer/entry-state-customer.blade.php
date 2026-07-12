@@ -59,7 +59,7 @@
         @endif
         @if($state->showDashboard())
         <div class="col-12 col-md-4">
-            <a href="{{ route('customer.dashboard') }}" class="btn btn-success w-100 py-3">
+            <a href="{{ route('customer.dashboard.personal') }}" class="btn btn-success w-100 py-3">
                 <div class="fs-4 mb-2">
                     →
                 </div>
