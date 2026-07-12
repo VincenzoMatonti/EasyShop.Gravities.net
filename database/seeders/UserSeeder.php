@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enum\Identity\IdentityRole;
 use App\Models\Identity\Role;
 use App\Models\Identity\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -39,10 +40,11 @@ class UserSeeder extends Seeder
                 ['email' => $data['email']],
                 [
                     'password' => Hash::make($data['password']),
+                    'email_verified_at' => Carbon::now(),
                 ]
             );
 
-            $role = Role::where('name', $data['role'])->firstOrFail();
+            $role = Role::where('name', $data['role']->value)->firstOrFail();
 
             $user->roles()->syncWithoutDetaching([$role->id]);
         }

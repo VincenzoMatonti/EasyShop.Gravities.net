@@ -29,9 +29,9 @@ class CustomerProfile extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_customer_profile')
-                    ->using(UserCustomerProfile::class)
-                    ->withPivot(['role', 'is_default'])
-                    ->withTimestamps();
+            ->using(UserCustomerProfile::class)
+            ->withPivot(['role', 'is_default'])
+            ->withTimestamps();
     }
 
     public function company()
@@ -97,5 +97,10 @@ class CustomerProfile extends Model
     public function scopePersonal(Builder $query): Builder
     {
         return $query->where('type', CustomerProfileType::personal);
+    }
+
+    public static function createPersonal(string $name, string $surname,): self
+    {
+        return self::create(['name' => trim("{$name} {$surname}"), 'type' => CustomerProfileType::personal,]);
     }
 }

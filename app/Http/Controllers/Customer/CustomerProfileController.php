@@ -2,36 +2,32 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Actions\Customer\SwitchCustomerProfileAction;
 use App\Http\Controllers\Controller;
-use App\Models\Identity\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Actions\Customer\SwitchCustomerProfileAction;
+use App\Queries\Customer\GetActiveCustomerProfilesQuery;
+use App\Http\Requests\Customer\SwitchCustomerProfileRequest;
+use App\Queries\Customer\GetCustomerEntryStateQuery;
 
 class CustomerProfileController extends Controller
 {
-    public function create()
+    public function index(GetCustomerEntryStateQuery $query)
     {
-        return view('customer.profile.create');
+        $state = $query->execute($this->user());
+
+        return view('customer.index', compact('state'));
     }
 
-    public function select()
+    public function select(GetActiveCustomerProfilesQuery $query)
     {
-        /** @var User $user */
-        $user = Auth::user();
+        $profiles = $query->execute($this->user());
 
-        $profiles = $user->getActiveCustomerProfiles();
-
-        return view('customer.profile.select', compact('profiles'));
+        return view('customer.select', compact('profiles'));
     }
 
 
-    public function switch(Request $request, SwitchCustomerProfileAction $action)
+    public function switch(SwitchCustomerProfileRequest $request, SwitchCustomerProfileAction $action)
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        $action->execute($user,$request->integer('customer_profile_id'));
+        $action->execute($request->dto($this->user()));
 
         return redirect()->route('customer.dashboard');
     }

@@ -22,6 +22,12 @@ class AuthenticateUser
             return null;
         }
 
+        if (!$user->hasVerifiedEmail()) {
+            throw ValidationException::withMessages([
+                'email' => 'Devi verificare la tua email prima di accedere.',
+            ]);
+        }
+
         return $user;
     }
 }
