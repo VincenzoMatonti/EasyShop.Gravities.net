@@ -11,6 +11,20 @@ class PersonalProfileStatusViewModel
     ) {}
 
 
+    public function items(): array
+    {
+        return array_map(function (array $check) {
+
+            return [
+                'label' => $check['label'],
+                'badge' => [
+                    'label' => $this->badgeLabel($check),
+                    'type' => $this->badgeType($check),
+                ],
+            ];
+        }, $this->checks);
+    }
+    
     public function completedCount(): int
     {
         return \count(array_filter($this->checks, fn(array $check) => $check['completed']));

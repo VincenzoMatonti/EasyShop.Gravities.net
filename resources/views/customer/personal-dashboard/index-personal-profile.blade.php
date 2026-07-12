@@ -7,21 +7,13 @@
                     <h1 class="display-5"> Benvenuto nella tua area cliente </h1>
                     <p class="lead"> Gestisci il tuo profilo e accedi ai tuoi servizi. </p>
                 </div>
-                <x-customer.personal-profile.section-card :title="$status->statusLabel()" icon="📋">
-                    <div class="text-center mb-3">
-                        <h2>
-                            {{ $status->progressLabel() }}
-                        </h2>
-                        <p class="text-muted">
-                            {{ $status->statusDescription() }}
-                        </p>
-                    </div>
-                    @foreach($status->checks() as $check)
+                <x-customer.personal-profile.section-card :title="$dashboard->status->statusLabel()" icon="📋">
+                    @foreach($dashboard->status->items() as $item)
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span>
-                            {{ $check['label'] }}
+                            {{ $item['label'] }}
                         </span>
-                        <x-customer.personal-profile.status-badge :label="$status->badgeLabel($check)" :type="$status->badgeType($check)" />
+                        <x-customer.personal-profile.status-badge :label="$item['badge']['label']" :type="$item['badge']['type']" />
                     </div>
                     @endforeach
                 </x-customer.personal-profile.section-card>
