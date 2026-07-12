@@ -1,11 +1,11 @@
 <?php
 
 use App\Enum\Identity\IdentityRole;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\CustomerDashboardController;
 use App\Http\Controllers\Customer\CustomerProfileController;
-use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\Manager\ManagerController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
