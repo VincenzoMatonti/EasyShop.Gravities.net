@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Actions\Customer\CreatePersonalCustomerProfileAction;
+use App\Http\Controllers\Controller;
 use App\Actions\Customer\SwitchCustomerProfileAction;
 use App\Queries\Customer\GetActiveCustomerProfilesQuery;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Customer\CreatePersonalCustomerProfileRequest;
 use App\Http\Requests\Customer\SwitchCustomerProfileRequest;
-use Illuminate\Http\Request;
+use App\Queries\Customer\GetCustomerEntryStateQuery;
 
 class CustomerProfileController extends Controller
 {
-    public function create_personal_profile()
+    public function index(GetCustomerEntryStateQuery $query)
     {
-        return view('customer.profile.create-personal-profile');
-    }
+        $state = $query->execute($this->user());
 
-    public function store_personal_profile(CreatePersonalCustomerProfileRequest $request, CreatePersonalCustomerProfileAction $action)
-    {
-        $action->execute($request->dto($this->user()));
-
-        return redirect()->route('customer.index');
+        return view('customer.index', compact('state'));
     }
 
     public function select(GetActiveCustomerProfilesQuery $query)
     {
         $profiles = $query->execute($this->user());
 
-        return view('customer.profile.select', compact('profiles'));
+        return view('customer.select', compact('profiles'));
     }
 
 

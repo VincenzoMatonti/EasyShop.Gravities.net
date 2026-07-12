@@ -11,7 +11,7 @@
                     <h4 class="mb-4 text-center"> Gestione account </h4>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <a href="#" class="btn btn-primary w-100 py-4">
+                            <a href="{{route('customer.dashboard.info.personal')}}" class="btn btn-primary w-100 py-4">
                                 <div class="fs-2"> 👤 </div>
                                 Profilo personale
                                 <small class="d-block mt-2">

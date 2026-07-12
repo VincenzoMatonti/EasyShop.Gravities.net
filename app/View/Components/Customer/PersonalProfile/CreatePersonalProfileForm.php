@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Customer\Profile;
+namespace App\View\Components\Customer\PersonalProfile;
 
 use Closure;
 use Illuminate\Contracts\View\View;
@@ -21,6 +21,6 @@ class CreatePersonalProfileForm extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.customer.profile.create-personal-profile-form');
+        return view('components.customer.personal-profile.create-personal-profile-form');
     }
 }
