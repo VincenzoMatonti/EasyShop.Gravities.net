@@ -22,7 +22,7 @@ class CustomerEntryViewModel
 
     public function showProfileSelection(): bool
     {
-        return $this->hasProfiles;
+        return $this->hasProfiles && $this->profilesCount > 1;
     }
 
     public function profileLabel(): string
@@ -36,6 +36,6 @@ class CustomerEntryViewModel
 
     public function createProfileLabel(): string
     {
-        return $this->hasProfiles ? 'Crea nuovo profilo' : 'Crea profilo';
+        return $this->hasProfiles ? 'Nuovo profilo' : 'Crea profilo';
     }
 }

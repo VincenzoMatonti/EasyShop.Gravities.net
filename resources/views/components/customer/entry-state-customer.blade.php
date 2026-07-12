@@ -7,15 +7,32 @@
             {{ $state->profileLabel() }}
         </p>
     </div>
-    <div class="row g-3">
+    <div class="d-flex flex-wrap justify-content-center gap-3">
         @if($state->showCreateProfile())
         <div class="col-12 col-md-4">
-            <a href="{{ route('customer.profile.create') }}" class="btn btn-primary w-100 py-3">
-                <div class="fs-4 mb-2">
-                    +
-                </div>
-                {{ $state->createProfileLabel() }}
-            </a>
+            <div class="dropdown">
+                <button class="btn btn-primary w-100 py-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="fs-4 mb-2"> + </div>
+                    {{ $state->createProfileLabel() }}
+                </button>
+                <ul class="dropdown-menu w-100 shadow">
+                    <li>
+                        <a class="dropdown-item py-3 text-center" href="{{ route('customer.profile.create') }}">
+                            <div class="fs-5"> 👤 </div>
+                            Profilo personale
+                        </a>
+                    </li>
+                    <li>
+                        <button class="dropdown-item py-3 text-center disabled" type="button">
+                            <div class="fs-5"> 🏢 </div>
+                            Profilo business
+                            <small class="d-block text-muted">
+                                Disponibile prossimamente
+                            </small>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
         @endif
         @if($state->showProfileSelection())
