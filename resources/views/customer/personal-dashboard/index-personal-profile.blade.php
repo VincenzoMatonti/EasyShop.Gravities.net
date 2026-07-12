@@ -20,7 +20,7 @@
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="#" class="btn btn-outline-primary w-100 py-4">
+                            <a href="{{route('customer.dashboard.addresses.personal')}}" class="btn btn-outline-primary w-100 py-4">
                                 <div class="fs-2"> 📦 </div>
                                 Indirizzi
                                 <small class="d-block mt-2">

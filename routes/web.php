@@ -45,6 +45,7 @@ Route::middleware([
         ])->group(function () {
             Route::get('/dashboard/personal/profile', [CustomerPersonalDashboardController::class, 'index_personal_profile'])->name('customer.dashboard.personal');
             Route::get('/dashboard/personal/profile-info', [CustomerPersonalDashboardController::class, 'show_personal_info'])->name('customer.dashboard.info.personal');
+            Route::get('/dashboard/personal/addresses', [CustomerPersonalDashboardController::class, 'show_personal_addresses'])->name('customer.dashboard.addresses.personal');
         });
     });
 });
