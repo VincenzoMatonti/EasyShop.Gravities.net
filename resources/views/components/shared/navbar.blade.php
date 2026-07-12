@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg shadow mynavbg fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand mytextcolor" href="{{ route('homepage') }}">{{ env('APP_NAME') }}</a>
+        <a class="navbar-brand mytextcolor" href="{{ route('home.index') }}">{{ env('APP_NAME') }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-nowrap">
                 <li class="nav-item">
-                    <a class="nav-link active d-flex align-items-center text-nowrap mytextcolor" aria-current="page" href="{{ route('homepage') }}">
+                    <a class="nav-link active d-flex align-items-center text-nowrap mytextcolor" aria-current="page" href="{{ route('home.index') }}">
                         Home <i class="fa-solid fa-house-chimney ms-1"></i>
                     </a>
                 </li>
