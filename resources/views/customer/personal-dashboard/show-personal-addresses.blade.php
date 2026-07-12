@@ -3,7 +3,7 @@
     <div class="container-fluid mybg mt-5">
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 mt-5">
-                <x-customer.personal-profile.header title="Indirizzi personali" subtitle="Consulta e gestisci gli indirizzi del tuo account." />
+                <x-customer.personal-profile.header :title="$addresses->headerTitle()" :subtitle="$addresses->headerSubtitle()" />
                 @foreach($addresses->sections() as $section)
                 <x-customer.personal-profile.section-card :title="$section['title']" :icon="$section['icon']">
                     @if($addresses->hasAddresses($section['addresses']))
@@ -21,8 +21,11 @@
                     @endif
                 </x-customer.personal-profile.section-card>
                 @endforeach
-                <div class="mt-4">
+                <div class="d-flex justify-content-between align-items-center mt-4">
                     <x-customer.personal-profile.back-button :route="route('customer.dashboard.personal')" label="Dashboard" />
+                    <button class="btn btn-success" disabled>
+                        Salva modifiche
+                    </button>
                 </div>
             </div>
         </div>

@@ -10,21 +10,34 @@ class PersonalAddressesViewModel
     ) {}
 
 
+    public function headerTitle(): string
+    {
+        return 'Indirizzi personali';
+    }
+
+
+    public function headerSubtitle(): string
+    {
+        return 'Consulta e gestisci gli indirizzi del tuo account.';
+    }
+
+
     public function sections(): array
     {
         return [
             [
-                'title' => $this->shippingTitle(),
+                'title' => $this->shippingSectionTitle(),
                 'icon' => '🚚',
                 'addresses' => $this->shippingAddresses,
             ],
             [
-                'title' => $this->billingTitle(),
+                'title' => $this->billingSectionTitle(),
                 'icon' => '🧾',
                 'addresses' => $this->billingAddresses,
             ],
         ];
     }
+
 
     public function hasAddresses(array $addresses): bool
     {
@@ -44,13 +57,13 @@ class PersonalAddressesViewModel
     }
 
 
-    public function shippingTitle(): string
+    private function shippingSectionTitle(): string
     {
         return 'Indirizzi di spedizione';
     }
 
 
-    public function billingTitle(): string
+    private function billingSectionTitle(): string
     {
         return 'Indirizzi di fatturazione';
     }
