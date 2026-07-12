@@ -8,7 +8,6 @@ class RegisterResponse implements RegisterResponseContract
 {
     public function toResponse($request)
     {
-        $user = $request->user();
-        return redirect()->route($user->homeRoute());
+        return redirect()->route('verification.notice');
     }
 }

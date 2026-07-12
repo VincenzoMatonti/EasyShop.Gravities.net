@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Enum\Identity\IdentityRole;
 use App\Enum\Customer\CustomerProfileType;
 use App\Http\Controllers\PublicController;
@@ -10,18 +12,36 @@ use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\Customer\PersonalProfile\CustomerPersonalDashboardController;
 use App\Http\Controllers\Customer\PersonalProfile\CustomerPersonalProfileController;
 
-
 /// ========================
 // PUBLIC
 // ========================
 Route::get('/', [PublicController::class, 'index'])->name('home.index');
 
+/// ========================
+// User verification
+// ========================
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect()->route('customer.index');
+    })->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back();
+    })->middleware('throttle:6,1')->name('verification.send');
+});
 
 // ========================
 // CUSTOMER PROFILE
 // ========================
 Route::middleware([
     'auth',
+    'verified',
     'role:' . IdentityRole::CUSTOMER->value,
 ])->prefix('customer')->group(function () {
     // Entry point customer
