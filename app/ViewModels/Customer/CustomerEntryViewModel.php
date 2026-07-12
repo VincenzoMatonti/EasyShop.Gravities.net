@@ -2,12 +2,16 @@
 
 namespace App\ViewModels\Customer;
 
+use App\Models\Customer\CustomerProfile;
+
 class CustomerEntryViewModel
 {
     public function __construct(
         public readonly bool $hasProfiles,
         public readonly bool $hasDefaultProfile,
         public readonly int $profilesCount,
+        public readonly bool $hasPersonalProfile,
+        public readonly ?CustomerProfile $defaultProfile,
     ) {}
 
     public function showCreateProfile(): bool
@@ -25,6 +29,11 @@ class CustomerEntryViewModel
         return $this->hasProfiles && $this->profilesCount > 1;
     }
 
+    public function canCreatePersonalProfile(): bool
+    {
+        return !$this->hasPersonalProfile;
+    }
+
     public function profileLabel(): string
     {
         return match (true) {
@@ -32,6 +41,15 @@ class CustomerEntryViewModel
             $this->profilesCount === 1 => '1 profilo disponibile',
             default => "{$this->profilesCount} profili disponibili",
         };
+    }
+
+    public function defaultProfileLabel(): ?string
+    {
+        if (!$this->defaultProfile) {
+            return null;
+        }
+
+        return $this->defaultProfile->name;
     }
 
     public function createProfileLabel(): string

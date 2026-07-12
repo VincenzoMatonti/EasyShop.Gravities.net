@@ -5,12 +5,17 @@ namespace App\DomainServices\Customer;
 use App\Dtos\Customer\CreatePersonalCustomerProfileData;
 use App\Enum\Customer\LabelEmail;
 use App\Enum\Customer\LabelPhone;
+use App\Exceptions\Customer\PersonalCustomerProfileAlreadyExistsException;
 use App\Models\Customer\CustomerProfile;
 
 class CustomerProfileDomainService
 {
     public function createPersonalProfile(CreatePersonalCustomerProfileData $data): CustomerProfile
     {
+        if ($data->user->hasPersonalCustomerProfile()) {
+            throw new PersonalCustomerProfileAlreadyExistsException();
+        }
+
         $profile = CustomerProfile::createPersonal($data->name, $data->surname,);
 
         $data->user->attachCustomerProfile($profile, !$data->user->hasDefaultCustomerProfile());

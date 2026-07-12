@@ -4,6 +4,7 @@ namespace App\Models\Identity;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enum\Customer\CustomerProfileType;
 use App\Enum\Customer\LabelEmail;
 use App\Enum\Customer\LabelPhone;
 use App\Enum\Identity\IdentityRole;
@@ -105,6 +106,11 @@ class User extends Authenticatable
     public function getDefaultCustomerProfile(): ?CustomerProfile
     {
         return $this->defaultCustomerProfile()->first();
+    }
+
+    public function hasPersonalCustomerProfile(): bool
+    {
+        return $this->activeCustomerProfiles()->where('type', CustomerProfileType::personal)->exists();
     }
 
     public function userInfo()

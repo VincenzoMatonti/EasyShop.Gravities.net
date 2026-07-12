@@ -1,5 +1,5 @@
 <div>
-    <form method="POST" action="{{ route('customer.profile.store') }}">
+    <form method="POST" action="{{ route('customer.personal.profile.store') }}">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">

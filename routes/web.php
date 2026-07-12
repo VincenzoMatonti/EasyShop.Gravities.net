@@ -26,9 +26,14 @@ Route::middleware([
     // Entry point customer
     Route::get('/', [CustomerController::class, 'index'])->name('customer.index');
     // Gestione profili
-    Route::get('/profile/create', [CustomerProfileController::class, 'create'])->name('customer.profile.create');
     Route::get('/profile/select', [CustomerProfileController::class, 'select'])->name('customer.profile.select');
-    Route::post('/profile/store', [CustomerProfileController::class, 'store'])->name('customer.profile.store');
+    // Area customer personal
+    Route::middleware([
+        'customer.personal.profile'
+    ])->group(function () {
+        Route::get('/profile/personal/create', [CustomerProfileController::class, 'create_personal_profile'])->name('customer.personal.profile.create');
+        Route::post('/profile/personal/store', [CustomerProfileController::class, 'store_personal_profile'])->name('customer.personal.profile.store');
+    });
     // Area con contesto customer attivo
     Route::middleware([
         'customer.profile.exists',

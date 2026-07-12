@@ -12,9 +12,15 @@ class GetCustomerEntryStateQuery
         $profiles = $user->getActiveCustomerProfiles();
 
         return new CustomerEntryViewModel(
-            hasProfiles: $profiles->isNotEmpty(),
-            hasDefaultProfile: $profiles->contains(fn($profile) => $profile->pivot->is_default),
-            profilesCount: $profiles->count(),
+            hasProfiles: $user->hasActiveCustomerProfiles(),
+
+            hasDefaultProfile: $user->hasDefaultCustomerProfile(),
+
+            profilesCount: $user->getActiveCustomerProfiles()->count(),
+
+            hasPersonalProfile: $user->hasPersonalCustomerProfile(),
+
+            defaultProfile: $user->getDefaultCustomerProfile(),
         );
     }
 }

@@ -12,12 +12,12 @@ use Illuminate\Http\Request;
 
 class CustomerProfileController extends Controller
 {
-    public function create()
+    public function create_personal_profile()
     {
-        return view('customer.profile.create');
+        return view('customer.profile.create-personal-profile');
     }
 
-    public function store(CreatePersonalCustomerProfileRequest $request, CreatePersonalCustomerProfileAction $action)
+    public function store_personal_profile(CreatePersonalCustomerProfileRequest $request, CreatePersonalCustomerProfileAction $action)
     {
         $action->execute($request->dto($this->user()));
 

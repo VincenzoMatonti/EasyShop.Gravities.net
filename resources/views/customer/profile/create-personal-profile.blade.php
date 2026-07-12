@@ -5,7 +5,7 @@
             <div class="col-12 col-md-6 mt-3">
                 <div class="card shadow p-4">
                     <h3 class="mb-4"> Create your personal profile </h3>
-                    <x-customer.profile.create-form />
+                    <x-customer.profile.create-personal-profile-form />
                 </div>
             </div>
         </div>
