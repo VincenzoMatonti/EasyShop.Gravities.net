@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Customer\PersonalProfile;
 
 use App\Http\Controllers\Controller;
-use App\Actions\Customer\CreatePersonalCustomerProfileAction;
-use App\Http\Requests\Customer\CreatePersonalCustomerProfileRequest;
+use App\Actions\Customer\Personal\CreatePersonalCustomerProfileAction;
+use App\Http\Requests\Customer\Personal\CreatePersonalCustomerProfileRequest;
 
 class CustomerPersonalProfileController extends Controller
 {

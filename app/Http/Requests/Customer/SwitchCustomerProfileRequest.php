@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Customer;
+namespace App\Http\Requests\Customer\Shared;
 
-use App\Dtos\Customer\SwitchCustomerProfileData;
+use App\Dtos\Customer\Shared\SwitchCustomerProfileData;
 use App\Models\Identity\User;
 use Illuminate\Foundation\Http\FormRequest;
 

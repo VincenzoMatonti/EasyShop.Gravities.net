@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Customer;
+namespace App\Http\Requests\Customer\Personal;
 
-use App\Dtos\Customer\CreatePersonalCustomerProfileData;
+use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
 use App\Models\Identity\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;

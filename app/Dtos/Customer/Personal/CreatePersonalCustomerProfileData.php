@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dtos\Customer;
+namespace App\Dtos\Customer\Personal;
 
 use App\Models\Identity\User;
 use Carbon\Carbon;

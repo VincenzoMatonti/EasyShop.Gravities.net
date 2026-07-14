@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dtos\Customer;
+namespace App\Dtos\Customer\Shared;
 
 use App\Models\Identity\User;
 

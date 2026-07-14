@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Customer;
+namespace App\Actions\Customer\Personal;
 
-use App\Dtos\Customer\CreatePersonalCustomerProfileData;
-use App\DomainServices\Customer\CustomerProfileDomainService;
+use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
+use App\DomainServices\Customer\Personal\CustomerPersonalProfileDomainService;
 use App\Models\Customer\CustomerProfile;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +13,7 @@ class CreatePersonalCustomerProfileAction
      * Create a new class instance.
      */
      public function __construct(
-         private readonly CustomerProfileDomainService $customerProfileDomainService
+         private readonly CustomerPersonalProfileDomainService $customerProfileDomainService
     ) {
     }
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\DomainServices\Customer;
+namespace App\DomainServices\Customer\Personal;
 
-use App\Dtos\Customer\CreatePersonalCustomerProfileData;
 use App\Enum\Customer\LabelEmail;
 use App\Enum\Customer\LabelPhone;
-use App\Exceptions\Customer\PersonalCustomerProfileAlreadyExistsException;
 use App\Models\Customer\CustomerProfile;
+use App\Exceptions\Customer\PersonalCustomerProfileAlreadyExistsException;
+use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
 
-class CustomerProfileDomainService
+class CustomerPersonalProfileDomainService
 {
     public function createPersonalProfile(CreatePersonalCustomerProfileData $data): CustomerProfile
     {

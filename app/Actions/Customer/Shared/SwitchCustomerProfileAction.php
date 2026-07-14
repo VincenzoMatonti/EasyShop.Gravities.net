@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Actions\Customer;
+namespace App\Actions\Customer\Shared;
 
-use App\Dtos\Customer\SwitchCustomerProfileData;
+use App\Dtos\Customer\Shared\SwitchCustomerProfileData;
 use App\Services\Customer\CustomerContextService;
 
 class SwitchCustomerProfileAction
