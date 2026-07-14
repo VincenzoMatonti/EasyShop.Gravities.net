@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Shared\EntryState;
 
 use App\Models\Identity\User;
-use App\ViewModels\Customer\CustomerEntryViewModel;
+use App\ViewModels\Customer\Shared\EntryState\CustomerEntryViewModel;
 
 class GetCustomerEntryStateQuery
 {
     public function execute(User $user): CustomerEntryViewModel
     {
-        $profiles = $user->getActiveCustomerProfiles();
-
         return new CustomerEntryViewModel(
             hasProfiles: $user->hasActiveCustomerProfiles(),
 

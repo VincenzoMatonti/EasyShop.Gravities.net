@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Customer;
 
-use App\ViewModels\Customer\CustomerEntryViewModel;
+use App\ViewModels\Customer\Shared\EntryState\CustomerEntryViewModel;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ViewModels\Customer;
+namespace App\ViewModels\Customer\Shared\EntryState;
 
 use App\Models\Customer\CustomerProfile;
 
