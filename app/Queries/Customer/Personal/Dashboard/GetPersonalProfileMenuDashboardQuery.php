@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Personal\Dashboard;
 
-use App\ViewModels\Customer\PersonalProfileMenuDashboardViewModel;
+use App\ViewModels\Customer\Personal\Dashboard\PersonalProfileMenuDashboardViewModel;
 
 class GetPersonalProfileMenuDashboardQuery
 {

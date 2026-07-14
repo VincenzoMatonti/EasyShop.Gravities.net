@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Customer\PersonalProfile;
 use App\Http\Controllers\Controller;
 use App\Queries\Customer\GetPersonalAddressesQuery;
 use App\Queries\Customer\GetPersonalProfileInfoQuery;
-use App\Queries\Customer\GetPersonalProfileMenuDashboardQuery;
+use App\Queries\Customer\Personal\Dashboard\GetPersonalProfileMenuDashboardQuery;
 
 class CustomerPersonalDashboardController extends Controller
 {

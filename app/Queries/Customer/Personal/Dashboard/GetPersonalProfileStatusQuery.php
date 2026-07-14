@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Personal\Dashboard;
 
 use App\Enum\Customer\LabelAddress;
 use App\Models\Customer\UserInfo;
 use App\Services\Customer\CustomerContextService;
-use App\ViewModels\Customer\PersonalProfileStatusViewModel;
+use App\ViewModels\Customer\Personal\Dashboard\PersonalProfileStatusViewModel;
+
 
 class GetPersonalProfileStatusQuery
 {

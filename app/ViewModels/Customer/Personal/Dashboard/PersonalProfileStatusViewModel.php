@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ViewModels\Customer;
+namespace App\ViewModels\Customer\Personal\Dashboard;
 
 use App\Enum\Customer\PersonalProfileBadgeType;
 
