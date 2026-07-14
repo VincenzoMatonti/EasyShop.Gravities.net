@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\Customer\Shared;
 
 use App\Http\Controllers\Controller;
 use App\Actions\Customer\SwitchCustomerProfileAction;
-use App\Queries\Customer\GetActiveCustomerProfilesQuery;
+use App\Queries\Customer\Shared\SelectState\GetActiveCustomerProfilesQuery;
 use App\Http\Requests\Customer\SwitchCustomerProfileRequest;
 use App\Queries\Customer\Shared\EntryState\GetCustomerEntryStateQuery;
 

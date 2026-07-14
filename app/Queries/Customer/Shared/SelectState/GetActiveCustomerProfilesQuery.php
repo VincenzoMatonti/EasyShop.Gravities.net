@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Shared\SelectState;
 
 use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Collection;

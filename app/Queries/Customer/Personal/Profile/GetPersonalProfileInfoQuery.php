@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Personal\Profile;
 
 use App\Services\Customer\CustomerContextService;
-use App\ViewModels\Customer\PersonalProfileInfoViewModel;
+use App\ViewModels\Customer\Personal\Profile\PersonalProfileInfoViewModel;
 
 class GetPersonalProfileInfoQuery
 {

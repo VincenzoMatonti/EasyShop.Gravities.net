@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Queries\Customer;
+namespace App\Queries\Customer\Personal\Addresses;
 
 use App\Enum\Customer\LabelAddress;
 use App\Enum\Customer\PersonalProfileBadgeType;
 use App\Models\Customer\Address;
 use App\Services\Customer\CustomerContextService;
-use App\ViewModels\Customer\PersonalAddressesViewModel;
+use App\ViewModels\Customer\Personal\Addresses\PersonalAddressesViewModel;
 
 class GetPersonalAddressesQuery
 {
