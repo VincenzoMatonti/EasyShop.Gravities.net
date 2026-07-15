@@ -15,6 +15,7 @@ use App\Models\Customer\Phone;
 use App\Models\Customer\UserCustomerProfile;
 use App\Models\Customer\UserInfo;
 use App\Models\Identity\Role;
+use App\Models\System\SystemError;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -131,6 +132,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function hasUserInfo(): bool
     {
         return $this->userInfo()->exists();
+    }
+
+    public function system_error()
+    {
+        return $this->hasMany(SystemError::class);
     }
 
     public function emails()

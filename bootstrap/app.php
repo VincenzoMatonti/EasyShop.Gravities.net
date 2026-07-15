@@ -10,9 +10,7 @@ use App\Http\Middleware\EnsureCustomerProfileOwner;
 use App\Http\Middleware\EnsureActiveCustomerProfile;
 use App\Http\Middleware\EnsureActiveCustomerProfileExists;
 use App\Http\Middleware\EnsurePersonalCustomerProfileCanBeCreated;
-
-
-
+use App\Services\System\ExceptionLoggerService;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,6 +29,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->report(function (Throwable $e) {
+            app(ExceptionLoggerService::class)->report($e);
+        });
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*'),
         );
