@@ -5,8 +5,8 @@ namespace App\Rules\Customer\Personal;
 use App\Enum\Customer\LabelEmail;
 use App\Enum\Customer\LabelPhone;
 use App\Models\Customer\CustomerProfile;
-use App\Exceptions\Customer\PersonalCustomerProfileAlreadyExistsException;
 use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
+use App\Exceptions\Customer\Personal\PersonalCustomerProfileAlreadyExistsException;
 
 class CustomerPersonalProfileDomainService
 {
