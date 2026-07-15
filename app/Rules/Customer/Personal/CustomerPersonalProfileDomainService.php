@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DomainServices\Customer\Personal;
+namespace App\Rules\Customer\Personal;
 
 use App\Enum\Customer\LabelEmail;
 use App\Enum\Customer\LabelPhone;

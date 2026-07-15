@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Customer\CustomerProfile;
 use App\Events\Customer\Personal\PersonalCustomerProfileCreated;
 use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
-use App\DomainServices\Customer\Personal\CustomerPersonalProfileDomainService;
+use App\Rules\Customer\Personal\CustomerPersonalProfileDomainService;
 
 class CreatePersonalCustomerProfileAction
 {
