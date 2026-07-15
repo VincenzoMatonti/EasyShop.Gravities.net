@@ -2,33 +2,28 @@
 
 namespace App\Actions\Customer\Personal;
 
+use Illuminate\Support\Facades\DB;
+use App\Models\Customer\CustomerProfile;
+use App\Events\Customer\Personal\PersonalCustomerProfileCreated;
 use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
 use App\DomainServices\Customer\Personal\CustomerPersonalProfileDomainService;
-use App\Models\Customer\CustomerProfile;
-use Illuminate\Support\Facades\DB;
 
 class CreatePersonalCustomerProfileAction
 {
-    /**
-     * Create a new class instance.
-     */
-     public function __construct(
-         private readonly CustomerPersonalProfileDomainService $customerProfileDomainService
-    ) {
-    }
+    public function __construct(
+        private readonly CustomerPersonalProfileDomainService $customerProfileDomainService
+    ) {}
 
     public function execute(CreatePersonalCustomerProfileData $data): CustomerProfile
     {
-        return DB::transaction(function () use ($data) {
-
-            $profile = $this->customerProfileDomainService->createPersonalProfile($data);
-
-            // event(new PersonalCustomerProfileCreated(
-            //     user: $data->user,
-            //     profile: $profile,
-            // ));
-
-            return $profile;
+        $profile =  DB::transaction(function () use ($data) {
+            return $this->customerProfileDomainService->createPersonalProfile($data);
         });
+
+        PersonalCustomerProfileCreated::dispatch(
+            profileId: $profile->id
+        );
+
+        return $profile;
     }
 }
