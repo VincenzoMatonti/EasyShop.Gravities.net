@@ -10,7 +10,7 @@ class CustomerPersonalProfileController extends Controller
 {
     public function create_personal_profile()
     {
-        return view('customer.personal-profile.create-personal-profile');
+        return view('customer.personal.profile.create-personal-profile');
     }
 
     public function store_personal_profile(CreatePersonalCustomerProfileRequest $request, CreatePersonalCustomerProfileAction $action)

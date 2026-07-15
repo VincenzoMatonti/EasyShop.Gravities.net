@@ -14,14 +14,14 @@ class CustomerProfileController extends Controller
     {
         $state = $query->execute($this->user());
 
-        return view('customer.index', compact('state'));
+        return view('customer.shared.index', compact('state'));
     }
 
     public function select(GetActiveCustomerProfilesQuery $query)
     {
         $profiles = $query->execute($this->user());
 
-        return view('customer.select', compact('profiles'));
+        return view('customer.shared.select', compact('profiles'));
     }
 
 

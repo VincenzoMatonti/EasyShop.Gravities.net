@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\Customer;
+namespace App\View\Components\Customer\Shared;
 
 use App\ViewModels\Customer\Shared\EntryState\CustomerEntryViewModel;
 use Closure;
@@ -15,6 +15,6 @@ class EntryStateCustomer extends Component
 
     public function render(): View|Closure|string
     {
-        return view('components.customer.entry-state-customer');
+        return view('components.customer.shared.entry-state-customer');
     }
 }

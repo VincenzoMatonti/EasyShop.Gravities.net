@@ -7,7 +7,7 @@
                     <h1 class="display-5"> Benvenuto nella tua area personale </h1>
                     <p class="lead">Gestisci i tuoi profili cliente e accedi ai tuoi servizi.</p>
                 </div>
-                <x-customer.entry-state-customer :state="$state" />
+                <x-customer.shared.entry-state-customer :state="$state" />
             </div>
         </div>
     </div>
