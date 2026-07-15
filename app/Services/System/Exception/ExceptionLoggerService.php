@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\System;
+namespace App\Services\System\Exception;
 
 use Throwable;
 use App\Models\System\SystemError;
