@@ -1,15 +1,18 @@
 <?php
 
-use App\Http\Middleware\EnsureActiveCustomerProfile;
-use App\Http\Middleware\EnsureActiveCustomerProfileExists;
-use App\Http\Middleware\EnsureCustomerProfileOwner;
-use App\Http\Middleware\EnsureCustomerProfileType;
-use App\Http\Middleware\EnsurePersonalCustomerProfileCanBeCreated;
-use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
+use App\Http\Middleware\EnsureCustomerProfileType;
+use App\Http\Middleware\EnsureCustomerProfileOwner;
+use App\Http\Middleware\EnsureActiveCustomerProfile;
+use App\Http\Middleware\EnsureActiveCustomerProfileExists;
+use App\Http\Middleware\EnsurePersonalCustomerProfileCanBeCreated;
+
+
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
