@@ -2,8 +2,10 @@
 
 namespace App\Services\Mail\Customer\Personal;
 
-use App\Mail\Customer\Personal\PersonalProfileCreatedMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Customer\CustomerProfile;
+use App\Mail\Customer\Personal\PersonalProfileCreatedMail;
+use App\Models\Identity\User;
 
 class PersonalProfileMailService
 {
@@ -12,8 +14,8 @@ class PersonalProfileMailService
      */
     public function __construct() {}
 
-    public function sendProfileCreated(string $email, string $customerName, string $profileUrl): void
+    public function sendProfileCreated(User $user, CustomerProfile $profile): void
     {
-        Mail::to($email)->queue(new PersonalProfileCreatedMail(customerName: $customerName, url: $profileUrl));
+        Mail::to($user->email)->queue(new PersonalProfileCreatedMail(customerName: $profile->name, url: route('customer.dashboard.personal')));
     }
 }

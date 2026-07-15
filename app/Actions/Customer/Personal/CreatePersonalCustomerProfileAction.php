@@ -16,14 +16,18 @@ class CreatePersonalCustomerProfileAction
 
     public function execute(CreatePersonalCustomerProfileData $data): CustomerProfile
     {
-        $profile =  DB::transaction(function () use ($data) {
-            return $this->customerProfileDomainService->createPersonalProfile($data);
+        return DB::transaction(function () use ($data) {
+
+            $profile = $this->customerProfileDomainService->createPersonalProfile($data);
+
+            DB::afterCommit(function () use ($profile, $data) {
+                event(new PersonalCustomerProfileCreated(
+                    profileId: $profile->id,
+                    userId: $data->user->id,
+                ));
+            });
+
+            return $profile;
         });
-
-        PersonalCustomerProfileCreated::dispatch(
-            profileId: $profile->id
-        );
-
-        return $profile;
     }
 }

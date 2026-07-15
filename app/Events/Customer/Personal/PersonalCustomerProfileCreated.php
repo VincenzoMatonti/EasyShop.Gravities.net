@@ -9,5 +9,5 @@ class PersonalCustomerProfileCreated
 {
     use Dispatchable, SerializesModels;
 
-    public function __construct(public readonly int $profileId){}
+    public function __construct(public readonly int $profileId, public readonly int $userId,) {}
 }

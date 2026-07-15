@@ -36,6 +36,7 @@ class PersonalProfileCreatedMail extends Mailable
     {
         return new Content(
             view: 'mails.customer.personal.profile-created',
+            with: ['customerName' => $this->customerName, 'url' => $this->url,],
         );
     }
 
