@@ -8,7 +8,7 @@ use App\Enum\Customer\CustomerProfileType;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Manager\ManagerController;
-use App\Http\Controllers\Customer\CustomerProfileController;
+use App\Http\Controllers\Customer\Shared\CustomerProfileController;
 use App\Http\Controllers\Customer\PersonalProfile\CustomerPersonalDashboardController;
 use App\Http\Controllers\Customer\PersonalProfile\CustomerPersonalProfileController;
 

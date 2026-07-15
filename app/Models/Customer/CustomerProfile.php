@@ -9,6 +9,13 @@ use App\Models\Order\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property CustomerProfileType $type
+ * @property bool $is_deleted
+ * @property int|null $company_id
+ */
 class CustomerProfile extends Model
 {
     protected $fillable = [

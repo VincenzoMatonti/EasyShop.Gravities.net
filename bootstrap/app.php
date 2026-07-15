@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Middleware\EnsureActiveCustomerProfile;
-use App\Http\Middleware\EnsureActiveCustomerProfileExists;
-use App\Http\Middleware\EnsureCustomerProfileOwner;
-use App\Http\Middleware\EnsureCustomerProfileType;
-use App\Http\Middleware\EnsurePersonalCustomerProfileCanBeCreated;
-use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
+use App\Http\Middleware\EnsureCustomerProfileType;
+use App\Http\Middleware\EnsureCustomerProfileOwner;
+use App\Http\Middleware\EnsureActiveCustomerProfile;
+use App\Http\Middleware\EnsureActiveCustomerProfileExists;
+use App\Http\Middleware\EnsurePersonalCustomerProfileCanBeCreated;
+use App\Services\System\Exception\ExceptionDecisionService;
+use App\Services\System\Exception\ExceptionLoggerService;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,6 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->report(fn(Throwable $e) => app(ExceptionLoggerService::class)->report($e));
+        $exceptions->render(fn (Throwable $e, Request $request) => app(ExceptionDecisionService::class)->handle($e, $request));
         $exceptions->shouldRenderJsonWhen(
             fn(Request $request) => $request->is('api/*'),
         );
