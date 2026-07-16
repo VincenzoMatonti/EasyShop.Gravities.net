@@ -83,26 +83,53 @@ The goal is to build a production-oriented system including:
 
 ---
 
+# Architecture
+
+The application follows a Technical Layered Architecture combined with Domain-Oriented Organization.
+
+The project is structured around:
+
+- Technical responsibility separation
+- Business domain organization
+- Independent domain evolution
+- Clear application workflows
+
+More details are available in the [Architecture Documentation](docs/architecture.md).
+
+---
+
 # Project Documentation
 
 Detailed technical documentation is available here:
 
 - [Architecture](docs/architecture.md)
 - [Project Structure](docs/project-structure.md)
+- [Business Domains](docs/domains.md)
 - [Git Workflow](docs/git-workflow.md)
 - [Roadmap](docs/roadmap.md)
-
+- [Changelog](CHANGELOG.md)
+  
 ---
 
 # Releases
 
 The project follows Semantic Versioning.
 
-Each important milestone is documented through GitHub Releases.
+Each important milestone is documented through Git tags, GitHub Releases, and the project changelog.
 
 Current version:
 
 **v0.7.0 - Main Release Baseline**
+
+Release history:
+
+- [v0.7.0 - Main Release Baseline](CHANGELOG.md#v070---main-release-baseline)
+- [v0.6.0 - Async Infrastructure & Error Management](CHANGELOG.md#v060---async-infrastructure--error-management)
+- [v0.5.0 - Enterprise Architecture Refactor](CHANGELOG.md#v050---enterprise-architecture-refactor)
+- [v0.4.0 - Customer Experience](CHANGELOG.md#v040---customer-experience)
+- [v0.3.0 - Commerce Core](CHANGELOG.md#v030---commerce-core)
+- [v0.2.0 - Customer Domain Foundation](CHANGELOG.md#v020---customer-domain-foundation)
+- [v0.1.0 - Foundation & Authentication](CHANGELOG.md#v010---foundation--authentication)
 
 ---
 
