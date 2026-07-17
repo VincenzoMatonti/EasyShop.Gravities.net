@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('role')->nullable();
             $table->boolean('is_default')->default(false);
             $table->timestamps();
-            $table->unique(['user_id','customer_profile_id']);
+            $table->unique(['user_id', 'customer_profile_id']);
         });
     }
 

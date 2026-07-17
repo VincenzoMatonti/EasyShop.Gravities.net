@@ -77,6 +77,7 @@ class PersonalProfileInfoViewModel
             ],
         ];
     }
+
     public function emailStatusLabel(): string
     {
         return $this->emailVerified ? 'Verificata' : 'Da verificare';

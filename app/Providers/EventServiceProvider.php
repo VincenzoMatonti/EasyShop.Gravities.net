@@ -15,7 +15,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
 
-        PersonalCustomerProfileCreated::class => [PersonalCustomerProfileCreatedListener::class,],
+        PersonalCustomerProfileCreated::class => [PersonalCustomerProfileCreatedListener::class],
 
     ];
 }

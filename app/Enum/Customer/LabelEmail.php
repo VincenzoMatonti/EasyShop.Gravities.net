@@ -8,7 +8,7 @@ enum LabelEmail: int
     case Personal = 1;
     case Work = 2;
 
-        // BUSINESS
+    // BUSINESS
     case Billing = 10;
     case Orders = 11;
     case Support = 12;
@@ -16,6 +16,6 @@ enum LabelEmail: int
     case Marketing = 14;
     case Info = 15;
 
-        // GENERICO
+    // GENERICO
     case Other = 99;
 }

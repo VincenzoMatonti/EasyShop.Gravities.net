@@ -3,7 +3,6 @@
 namespace App\Mail\Customer\Personal;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -36,7 +35,7 @@ class PersonalProfileCreatedMail extends Mailable
     {
         return new Content(
             view: 'mails.customer.personal.profile-created',
-            with: ['customerName' => $this->customerName, 'url' => $this->url,],
+            with: ['customerName' => $this->customerName, 'url' => $this->url],
         );
     }
 

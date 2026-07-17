@@ -3,7 +3,6 @@
 namespace App\Models\Identity;
 
 use App\Enum\Identity\IdentityRole;
-use App\Models\Identity\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

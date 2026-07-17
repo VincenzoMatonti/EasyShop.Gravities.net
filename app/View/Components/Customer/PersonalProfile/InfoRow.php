@@ -11,7 +11,7 @@ class InfoRow extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public readonly string $label, public readonly ?string $value = null,) {}
+    public function __construct(public readonly string $label, public readonly ?string $value = null) {}
 
     /**
      * Get the view / contents that represent the component.

@@ -3,9 +3,8 @@
 namespace App\Models\Customer;
 
 use App\Enum\Customer\LabelAddress;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Address extends Model
 {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Identity\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Identity\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureActiveCustomerProfileExists
@@ -20,7 +20,7 @@ class EnsureActiveCustomerProfileExists
         /** @var User $user */
         $user = Auth::user();
 
-        if (!$user->hasActiveCustomerProfiles()) {
+        if (! $user->hasActiveCustomerProfiles()) {
             return redirect()->route('customer.profile.create');
         }
 

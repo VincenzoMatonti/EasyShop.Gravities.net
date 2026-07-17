@@ -31,13 +31,13 @@ class CustomerEntryViewModel
 
     public function canCreatePersonalProfile(): bool
     {
-        return !$this->hasPersonalProfile;
+        return ! $this->hasPersonalProfile;
     }
 
     public function profileLabel(): string
     {
         return match (true) {
-            !$this->hasProfiles => 'Nessun profilo creato',
+            ! $this->hasProfiles => 'Nessun profilo creato',
             $this->profilesCount === 1 => '1 profilo disponibile',
             default => "{$this->profilesCount} profili disponibili",
         };
@@ -45,7 +45,7 @@ class CustomerEntryViewModel
 
     public function defaultProfileLabel(): ?string
     {
-        if (!$this->defaultProfile) {
+        if (! $this->defaultProfile) {
             return null;
         }
 

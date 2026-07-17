@@ -27,7 +27,7 @@ class CartItem extends Model
             'discount_snapshot' => 'decimal:2',
         ];
     }
-	/*
+    /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
@@ -42,10 +42,10 @@ class CartItem extends Model
     {
         return $this->belongsTo(ProductVariant::class);
     }
-	
-	/*
+
+    /*
     |--------------------------------------------------------------------------
-    | SNAPSHOT GETTERS 
+    | SNAPSHOT GETTERS
     |--------------------------------------------------------------------------
     */
 
@@ -138,13 +138,13 @@ class CartItem extends Model
     {
         return $this->quantity >= 10;
     }
-	
-	public function isEmpty(): bool
+
+    public function isEmpty(): bool
     {
         return $this->quantity <= 0;
     }
-	
-	/*
+
+    /*
     |--------------------------------------------------------------------------
     | CALCULATED HELPERS
     |--------------------------------------------------------------------------

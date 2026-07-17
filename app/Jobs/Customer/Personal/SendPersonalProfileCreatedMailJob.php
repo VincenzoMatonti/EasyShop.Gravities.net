@@ -4,9 +4,9 @@ namespace App\Jobs\Customer\Personal;
 
 use App\Models\Customer\CustomerProfile;
 use App\Models\Identity\User;
+use App\Services\Mail\Customer\Personal\PersonalProfileMailService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use App\Services\Mail\Customer\Personal\PersonalProfileMailService;
 
 class SendPersonalProfileCreatedMailJob implements ShouldQueue
 {
@@ -15,7 +15,7 @@ class SendPersonalProfileCreatedMailJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public readonly int $profileId, public readonly int $userId,) {}
+    public function __construct(public readonly int $profileId, public readonly int $userId) {}
 
     /**
      * Execute the job.

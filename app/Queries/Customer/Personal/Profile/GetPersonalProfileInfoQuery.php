@@ -7,7 +7,7 @@ use App\ViewModels\Customer\Personal\Profile\PersonalProfileInfoViewModel;
 
 class GetPersonalProfileInfoQuery
 {
-     public function __construct(
+    public function __construct(
         private CustomerContextService $context,
     ) {}
 

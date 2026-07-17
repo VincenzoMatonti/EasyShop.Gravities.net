@@ -31,7 +31,7 @@ class Order extends Model
             'shipping_total' => 'decimal:2',
             'discount_total' => 'decimal:2',
             'grand_total' => 'decimal:2',
-            'currency' => Currency::class
+            'currency' => Currency::class,
         ];
     }
 
@@ -102,7 +102,7 @@ class Order extends Model
 
     public function cancelOrder(): void
     {
-		$this->status = OrderStatus::cancelled;
+        $this->status = OrderStatus::cancelled;
         $this->save();
     }
 

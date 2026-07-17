@@ -15,7 +15,7 @@ class SwitchCustomerProfileRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['customer_profile_id' => ['required', 'integer',],];
+        return ['customer_profile_id' => ['required', 'integer']];
     }
 
     public function dto(User $user): SwitchCustomerProfileData
