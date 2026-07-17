@@ -1,0 +1,50 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  validation:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, bcmath, pdo_mysql
+          coverage: none
+
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+
+      - name: Install NPM dependencies
+        run: npm install
+
+
+      - name: Build frontend
+        run: npm run build
+
+
+      - name: Run Laravel tests
+        run: php artisan test
+
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
