@@ -100,7 +100,7 @@ class InventoryItem extends Model
 
     public function commitSale(int $qty): void
     {
-        if (!$this->canReserve($qty)) {
+        if (! $this->canReserve($qty)) {
             throw new RuntimeException('Cannot commit sale: insufficient reserved stock.');
         }
 

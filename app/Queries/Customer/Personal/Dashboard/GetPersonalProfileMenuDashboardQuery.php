@@ -10,7 +10,6 @@ class GetPersonalProfileMenuDashboardQuery
         private readonly GetPersonalProfileStatusQuery $statusQuery,
     ) {}
 
-
     public function execute(): PersonalProfileMenuDashboardViewModel
     {
         return new PersonalProfileMenuDashboardViewModel(

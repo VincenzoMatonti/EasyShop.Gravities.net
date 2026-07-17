@@ -7,25 +7,23 @@ use App\Models\Customer\UserInfo;
 use App\Services\Customer\CustomerContextService;
 use App\ViewModels\Customer\Personal\Dashboard\PersonalProfileStatusViewModel;
 
-
 class GetPersonalProfileStatusQuery
 {
     public function __construct(
         private readonly CustomerContextService $context,
     ) {}
 
-
     public function execute(): PersonalProfileStatusViewModel
     {
         $profile = $this->context->current();
 
-        if (!$profile) {
+        if (! $profile) {
             abort(403);
         }
 
         $user = $profile->users()->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(403);
         }
 
@@ -72,10 +70,9 @@ class GetPersonalProfileStatusQuery
         );
     }
 
-
     private function hasPersonalData(?UserInfo $info): bool
     {
-        if (!$info) {
+        if (! $info) {
             return false;
         }
 

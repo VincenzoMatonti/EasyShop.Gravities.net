@@ -18,9 +18,9 @@ class UserInfo extends Model
         'nationality',
         'gender',
         'residence',
-        'domicile'
+        'domicile',
     ];
-    
+
     protected function casts(): array
     {
         return [

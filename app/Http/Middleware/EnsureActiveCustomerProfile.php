@@ -13,8 +13,7 @@ class EnsureActiveCustomerProfile
 {
     public function __construct(
         private readonly CustomerContextService $customerContext,
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, Closure $next): Response
     {

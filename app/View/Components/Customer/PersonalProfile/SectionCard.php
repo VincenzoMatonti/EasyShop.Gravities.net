@@ -11,7 +11,7 @@ class SectionCard extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public readonly string $title, public readonly ?string $icon = null,) {}
+    public function __construct(public readonly string $title, public readonly ?string $icon = null) {}
 
     /**
      * Get the view / contents that represent the component.

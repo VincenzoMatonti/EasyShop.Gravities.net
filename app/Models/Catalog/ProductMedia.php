@@ -17,7 +17,7 @@ class ProductMedia extends Model
     protected function casts(): array
     {
         return [
-           'type' => MediaType::class,
+            'type' => MediaType::class,
         ];
     }
 

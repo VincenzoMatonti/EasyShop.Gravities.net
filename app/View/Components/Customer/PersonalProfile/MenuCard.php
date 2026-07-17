@@ -15,7 +15,7 @@ class MenuCard extends Component
         public readonly ?string $description = null,
         public readonly string $style = 'primary',
     ) {}
-    
+
     public function render(): View|Closure|string
     {
         return view('components.customer.personal-profile.menu-card');

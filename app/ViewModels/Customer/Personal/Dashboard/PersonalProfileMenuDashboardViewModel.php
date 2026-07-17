@@ -8,7 +8,6 @@ class PersonalProfileMenuDashboardViewModel
         public readonly PersonalProfileStatusViewModel $status,
     ) {}
 
-
     public function menuItems(): array
     {
         return [

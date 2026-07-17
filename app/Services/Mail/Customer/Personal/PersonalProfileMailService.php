@@ -2,10 +2,10 @@
 
 namespace App\Services\Mail\Customer\Personal;
 
-use Illuminate\Support\Facades\Mail;
-use App\Models\Customer\CustomerProfile;
 use App\Mail\Customer\Personal\PersonalProfileCreatedMail;
+use App\Models\Customer\CustomerProfile;
 use App\Models\Identity\User;
+use Illuminate\Support\Facades\Mail;
 
 class PersonalProfileMailService
 {

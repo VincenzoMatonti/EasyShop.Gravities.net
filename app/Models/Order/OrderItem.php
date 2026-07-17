@@ -62,25 +62,25 @@ class OrderItem extends Model
     {
         return (float) $this->total_price;
     }
-	
-	public function calculateTotal(): float
-	{
-		return $this->quantity() * $this->unitPrice();
-	}
+
+    public function calculateTotal(): float
+    {
+        return $this->quantity() * $this->unitPrice();
+    }
 
     /*
     |--------------------------------------------------------------------------
     | VALIDATION LOGIC
     |--------------------------------------------------------------------------
     */
-	
-	protected static function booted(): void
-	{
-		static::saving(function ($item) {
-			$item->total_price = $item->calculateTotal();
-		});
-	}
-	
+
+    protected static function booted(): void
+    {
+        static::saving(function ($item) {
+            $item->total_price = $item->calculateTotal();
+        });
+    }
+
     public function isFree(): bool
     {
         return $this->unitPrice() <= 0;
