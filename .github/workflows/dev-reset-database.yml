@@ -1,10 +1,10 @@
-name: Database Migration
+name: DEV Reset Database
 
 on:
   workflow_dispatch:
 
 jobs:
-  migrate:
+  reset:
 
     runs-on: ubuntu-latest
 
@@ -25,7 +25,7 @@ jobs:
         run: |
           echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
 
-      - name: Run migrations
+      - name: Reset database
         env:
           APP_ENV: production
           APP_KEY: ${{ secrets.APP_KEY }}
@@ -40,4 +40,4 @@ jobs:
           MYSQL_ATTR_SSL_CA: tidb-ca.pem
 
         run: |
-          php artisan migrate --force
+          php artisan migrate:fresh --seed --force
