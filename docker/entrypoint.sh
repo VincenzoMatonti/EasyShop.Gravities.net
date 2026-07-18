@@ -21,13 +21,6 @@ chown -R www-data:www-data storage bootstrap/cache
 # Clear old cache
 php artisan config:clear || true
 
-echo "MYSQL_ATTR_SSL_CA=$MYSQL_ATTR_SSL_CA"
-
-if [ -f "$MYSQL_ATTR_SSL_CA" ]; then
-    echo "CA file found"
-else
-    echo "CA file NOT found"
-fi
 
 # Build production cache
 php artisan config:cache || true
@@ -38,6 +31,16 @@ php artisan view:cache || true
 # Storage
 php artisan storage:link || true
 
+mysql \
+  --host="$DB_HOST" \
+  --port="$DB_PORT" \
+  --user="$DB_USERNAME" \
+  --password="$DB_PASSWORD" \
+  --ssl-ca="$MYSQL_ATTR_SSL_CA" \
+  "$DB_DATABASE" \
+  -e "SELECT VERSION();"
+
+php artisan tinker --execute="DB::connection()->getPdo();"
 
 echo "Laravel ready"
 
