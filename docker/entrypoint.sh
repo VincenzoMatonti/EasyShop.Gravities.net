@@ -21,6 +21,13 @@ chown -R www-data:www-data storage bootstrap/cache
 # Clear old cache
 php artisan config:clear || true
 
+echo "MYSQL_ATTR_SSL_CA=$MYSQL_ATTR_SSL_CA"
+
+if [ -f "$MYSQL_ATTR_SSL_CA" ]; then
+    echo "CA file found"
+else
+    echo "CA file NOT found"
+fi
 
 # Build production cache
 php artisan config:cache || true
