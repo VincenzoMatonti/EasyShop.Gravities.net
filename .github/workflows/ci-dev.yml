@@ -54,9 +54,13 @@ jobs:
       DB_DATABASE: ecommerce_test
       DB_USERNAME: sail
       DB_PASSWORD: password
-
+  
+  
+      REDIS_CLIENT: phpredis
+      REDIS_SCHEME: null
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: 6379
+      REDIS_PASSWORD: null
 
 
       MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
