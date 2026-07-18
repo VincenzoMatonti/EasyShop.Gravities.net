@@ -65,12 +65,19 @@ RUN docker-php-ext-configure gd \
         zip
 
 
+# Redis PHP extension (phpredis)
+RUN pecl install redis \
+    && docker-php-ext-enable redis
+
+
 COPY . .
 
 
 COPY --from=vendor /app/vendor ./vendor
 
 COPY --from=frontend /app/public/build ./public/build
+
+RUN rm -f public/hot
 
 
 COPY docker/nginx/default.conf \
