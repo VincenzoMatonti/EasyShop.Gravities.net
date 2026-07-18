@@ -22,27 +22,22 @@ chown -R www-data:www-data storage bootstrap/cache
 php artisan config:clear || true
 
 
+# Clear old cache
+php artisan optimize:clear
+
 # Build production cache
-php artisan config:cache || true
-php artisan route:cache || true
-php artisan view:cache || true
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 
 # Storage
 php artisan storage:link || true
 
-mysql \
-  --host="$DB_HOST" \
-  --port="$DB_PORT" \
-  --user="$DB_USERNAME" \
-  --password="$DB_PASSWORD" \
-  --ssl-ca="$MYSQL_ATTR_SSL_CA" \
-  "$DB_DATABASE" \
-  -e "SELECT VERSION();"
+echo "Checking DB..."
 
-php artisan tinker --execute="DB::connection()->getPdo();"
+php artisan tinker --execute="echo config('database.connections.mysql.host');DB::connection()->getPdo();echo ' DB OK';"
 
 echo "Laravel ready"
-
 
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
