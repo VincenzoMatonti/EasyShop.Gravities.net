@@ -32,7 +32,19 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+      
 
+      redis:
+        image: redis:7
+
+        ports:
+          - 6379:6379
+
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     env:
 
@@ -42,6 +54,20 @@ jobs:
       DB_DATABASE: ecommerce_test
       DB_USERNAME: sail
       DB_PASSWORD: password
+
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+
+
+      MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
+      MAIL_SCHEME: ${{ secrets.MAIL_SCHEME }}
+      MAIL_HOST: ${{ secrets.MAIL_HOST }}
+      MAIL_PORT: ${{ secrets.MAIL_PORT }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      MAIL_ENCRYPTION: ${{ secrets.MAIL_ENCRYPTION }}
+      MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
+      MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
 
 
     steps:
@@ -93,6 +119,19 @@ jobs:
 
       - name: Run database migrations
         run: php artisan migrate --force
+
+
+      - name: Check database connection
+        run: php artisan migrate:status
+
+
+      - name: Check Redis connection
+        run: php artisan tinker --execute="dump(Redis::ping());"
+
+
+      - name: Check mail configuration
+        run: |
+          php artisan tinker --execute="dump(config('mail.mailers.smtp.host'));"
 
 
       - name: Run Laravel tests
