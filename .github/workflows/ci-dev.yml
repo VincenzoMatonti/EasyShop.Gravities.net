@@ -126,7 +126,7 @@ jobs:
 
 
       - name: Check Redis connection
-        run: php artisan tinker --execute="dump(Redis::ping());"
+        run: php artisan tinker --execute="dump(app('redis')->ping());"
 
 
       - name: Check mail configuration
