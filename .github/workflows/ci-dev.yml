@@ -92,6 +92,10 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
+      - name: Show Redis environment
+        run: |
+          env | grep REDIS
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -112,10 +116,9 @@ jobs:
 
       - name: Check Redis connection
         run: |
-          php artisan optimize:clear
           env | grep REDIS
           php artisan tinker --execute="dump(config('database.redis.default')); dump(app('redis')->ping());"
-      
+
       - name: Check mail configuration
         run: |
           php artisan tinker --execute="dump(config('mail.mailers.smtp.host'));"
