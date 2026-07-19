@@ -12,14 +12,17 @@ class MailProfileService
      */
     private function profile(MailProfile $profile): array
     {
-        return config("mail.profiles.{$profile->value}");
+        /** @var array{address:string, name:string} $config */
+        $config = config("mail.profiles.{$profile->value}");
+
+        return $config;
     }
 
     private function address(MailProfile $profile): Address
     {
         $config = $this->profile($profile);
 
-        return new Address($config['address'], $config['name'],);
+        return new Address($config['address'], $config['name']);
     }
 
     public function default(): Address
