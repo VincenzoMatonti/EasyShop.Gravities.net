@@ -37,6 +37,8 @@ WORKDIR /var/www/html
 
 
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    openssl \
     nginx \
     supervisor \
     unzip \
@@ -55,14 +57,14 @@ RUN apt-get update && apt-get install -y \
 
 # Laravel PHP extensions
 RUN docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
+    --with-freetype \
+    --with-jpeg \
     && docker-php-ext-install \
-        gd \
-        pdo_mysql \
-        bcmath \
-        intl \
-        zip
+    gd \
+    pdo_mysql \
+    bcmath \
+    intl \
+    zip
 
 
 # Redis PHP extension (phpredis)
@@ -70,12 +72,19 @@ RUN pecl install redis \
     && docker-php-ext-enable redis
 
 
-COPY . .
+# Application
+COPY --chown=www-data:www-data . .
 
 
-COPY --from=vendor /app/vendor ./vendor
+COPY --from=vendor \
+    --chown=www-data:www-data \
+    /app/vendor ./vendor
 
-COPY --from=frontend /app/public/build ./public/build
+
+COPY --from=frontend \
+    --chown=www-data:www-data \
+    /app/public/build ./public/build
+
 
 RUN rm -f public/hot
 
@@ -88,9 +97,10 @@ COPY docker/supervisor/supervisord.conf \
     /etc/supervisor/conf.d/supervisord.conf
 
 
-RUN chown -R www-data:www-data \
-    storage \
-    bootstrap/cache
+# Laravel writable folders
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 
 EXPOSE 80

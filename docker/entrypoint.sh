@@ -15,15 +15,19 @@ mkdir -p storage/framework/views
 mkdir -p bootstrap/cache
 
 
-# Permissions
+# Laravel permissions
 chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
+
+# Render mounted secrets permissions
+if [ -f /etc/secrets/tidb-ca.pem ]; then
+    chown root:www-data /etc/secrets/tidb-ca.pem
+    chmod 640 /etc/secrets/tidb-ca.pem
+fi
 
 # Clear old cache
 php artisan config:clear || true
-
-
-# Clear old cache
 php artisan optimize:clear
 
 # Build production cache
