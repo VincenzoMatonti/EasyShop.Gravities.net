@@ -55,6 +55,12 @@ var_dump(config('database.connections.mysql.options'));
 
 php artisan storage:link || true
 
+echo "Checking certificate access as www-data..."
+
+su -s /bin/bash www-data -c "
+ls -l /etc/secrets/tidb-ca.pem
+head -n 2 /etc/secrets/tidb-ca.pem
+"
 
 echo "Checking DB as www-data..."
 
