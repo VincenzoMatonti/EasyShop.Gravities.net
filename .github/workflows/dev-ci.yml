@@ -49,7 +49,7 @@ jobs:
       MAIL_MAILER: resend
       MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
       MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
-      RESEND_KEY: ${{ secrets.RESEND_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
       - name: Checkout repository
