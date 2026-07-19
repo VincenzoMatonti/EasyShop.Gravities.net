@@ -19,11 +19,12 @@ mkdir -p bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-
-# Render mounted secrets permissions
+# Check Render mounted secrets (read only)
 if [ -f /etc/secrets/tidb-ca.pem ]; then
-    chown root:www-data /etc/secrets/tidb-ca.pem
-    chmod 640 /etc/secrets/tidb-ca.pem
+    echo "TiDB CA certificate found"
+    ls -l /etc/secrets/tidb-ca.pem
+else
+    echo "TiDB CA certificate missing"
 fi
 
 # Clear old cache
