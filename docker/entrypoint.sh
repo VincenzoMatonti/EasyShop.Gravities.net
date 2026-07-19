@@ -7,7 +7,7 @@ echo "Starting Laravel..."
 cd /var/www/html
 
 
-echo "Preparing Laravel directories..."
+echo "Preparing runtime directories..."
 
 mkdir -p \
     storage/logs \
@@ -18,36 +18,31 @@ mkdir -p \
     bootstrap/cache
 
 
-echo "Applying Laravel permissions..."
+echo "Applying permissions..."
 
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
 
-echo "Preparing TiDB CA certificate..."
+echo "Preparing TiDB certificate..."
 
 if [ -e /etc/secrets/tidb-ca.pem ]; then
-    echo "TiDB CA certificate found"
 
     cp /etc/secrets/tidb-ca.pem storage/certs/tidb-ca.pem
 
     chown www-data:www-data storage/certs/tidb-ca.pem
     chmod 640 storage/certs/tidb-ca.pem
 
-    echo "Runtime TiDB CA certificate:"
-    ls -la storage/certs/tidb-ca.pem
+    echo "TiDB certificate ready"
+
 else
-    echo "WARNING: TiDB CA certificate missing"
+    echo "WARNING: TiDB certificate not found"
 fi
 
 
-echo "Clearing Laravel cache..."
-
-php artisan config:clear || true
-php artisan optimize:clear
-
-
 echo "Building Laravel cache..."
+
+php artisan optimize:clear
 
 php artisan config:cache
 php artisan route:cache
@@ -56,18 +51,6 @@ php artisan event:cache
 
 
 php artisan storage:link || true
-
-
-echo "Checking DB as www-data..."
-
-su -s /bin/bash www-data -c "
-php artisan tinker --execute=\"
-echo config('database.connections.mysql.host');
-echo PHP_EOL;
-DB::connection()->getPdo();
-echo 'DB OK';
-\"
-"
 
 
 echo "Laravel ready"
