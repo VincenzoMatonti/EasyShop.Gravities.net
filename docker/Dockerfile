@@ -71,6 +71,11 @@ RUN docker-php-ext-configure gd \
 RUN pecl install redis \
     && docker-php-ext-enable redis
 
+# PHP-FPM explicit runtime user
+RUN sed -i 's/^user = .*/user = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^group = .*/group = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^listen.owner = .*/listen.owner = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^listen.group = .*/listen.group = www-data/' /usr/local/etc/php-fpm.d/www.conf
 
 # Application
 COPY --chown=www-data:www-data . .

@@ -7,44 +7,63 @@ echo "Starting Laravel..."
 cd /var/www/html
 
 
-# Laravel directories
-mkdir -p storage/logs
-mkdir -p storage/framework/cache
-mkdir -p storage/framework/sessions
-mkdir -p storage/framework/views
-mkdir -p bootstrap/cache
+echo "Preparing Laravel directories..."
+
+mkdir -p \
+    storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache
 
 
-# Laravel permissions
+echo "Applying Laravel permissions..."
+
 chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
-# Check Render mounted secrets (read only)
-if [ -f /etc/secrets/tidb-ca.pem ]; then
+
+echo "Checking Render TiDB certificate..."
+
+if [ -e /etc/secrets/tidb-ca.pem ]; then
     echo "TiDB CA certificate found"
-    ls -l /etc/secrets/tidb-ca.pem
+    ls -la /etc/secrets/tidb-ca.pem
 else
-    echo "TiDB CA certificate missing"
+    echo "WARNING: TiDB CA certificate missing"
 fi
 
-# Clear old cache
+
+echo "Clearing Laravel cache..."
+
 php artisan config:clear || true
 php artisan optimize:clear
 
-# Build production cache
+
+echo "Building Laravel cache..."
+
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
 
 
-# Storage
 php artisan storage:link || true
 
-echo "Checking DB..."
 
-php artisan tinker --execute="echo config('database.connections.mysql.host');DB::connection()->getPdo();echo ' DB OK';"
+echo "Checking DB as www-data..."
+
+su -s /bin/bash www-data -c "
+php artisan tinker --execute=\"
+echo config('database.connections.mysql.host');
+echo PHP_EOL;
+DB::connection()->getPdo();
+echo 'DB OK';
+\"
+"
+
 
 echo "Laravel ready"
 
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+
+exec /usr/bin/supervisord \
+    -c /etc/supervisor/conf.d/supervisord.conf
