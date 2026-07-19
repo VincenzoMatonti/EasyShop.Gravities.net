@@ -25,9 +25,9 @@ class ExceptionLoggerService
             'trace' => $exception->getTraceAsString(),
 
             'context' => array_merge([
-                'url' => request()?->fullUrl(),
-                'method' => request()?->method(),
-                'ip' => request()?->ip(),
+                'url' => request()->fullUrl(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
                 'previous' => $exception->getPrevious()?->getMessage(),
             ], $context),
 

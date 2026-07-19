@@ -18,6 +18,11 @@ use App\Models\System\SystemError;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +31,13 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $email
  * @property bool $is_deleted
+ * @property-read Collection<int, Role> $roles
+ * @property-read Collection<int, CustomerProfile> $customerProfiles
+ * @property-read Collection<int, Email> $emails
+ * @property-read Collection<int, Phone> $phones
+ * @property-read Collection<int, Address> $addresses
+ * @property-read Collection<int, SystemError> $systemErrors
+ * @property-read UserInfo|null $userInfo
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -65,7 +77,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->where('is_deleted', false);
     }
 
-    public function customerProfiles()
+    /**
+     * @return BelongsToMany<CustomerProfile, UserCustomerProfile>
+     */
+    public function customerProfiles(): BelongsToMany
     {
         return $this->belongsToMany(CustomerProfile::class, 'user_customer_profile')
             ->using(UserCustomerProfile::class)
@@ -78,12 +93,18 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->customerProfiles()->attach($profile, ['role' => null, 'is_default' => $isDefault]);
     }
 
-    public function activeCustomerProfiles()
+    /**
+     * @return BelongsToMany<CustomerProfile,  $this>
+     */
+    public function activeCustomerProfiles(): BelongsToMany
     {
         return $this->customerProfiles()->where('customer_profiles.is_deleted', false);
     }
 
-    public function defaultCustomerProfile()
+    /**
+     * @return BelongsToMany<CustomerProfile,  $this>
+     */
+    public function defaultCustomerProfile(): BelongsToMany
     {
         return $this->activeCustomerProfiles()->wherePivot('is_default', true);
     }
@@ -98,7 +119,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->activeCustomerProfiles()->exists();
     }
 
-    public function getActiveCustomerProfiles()
+    public function getActiveCustomerProfiles(): Collection
     {
         return $this->activeCustomerProfiles()->get();
     }
@@ -110,6 +131,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getDefaultCustomerProfile(): ?CustomerProfile
     {
+        /**
+         * @return BelongsToMany<CustomerProfile, User>
+         */
         return $this->defaultCustomerProfile()->first();
     }
 
@@ -118,11 +142,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->activeCustomerProfiles()->where('type', CustomerProfileType::personal)->exists();
     }
 
-    public function userInfo()
+    /**
+     * @return HasOne<UserInfo, $this>
+     */
+    public function userInfo(): HasOne
     {
         return $this->hasOne(UserInfo::class);
     }
 
+    /**
+     * @param array<string,mixed> $attributes
+     */
     public function createUserInfo(array $attributes): UserInfo
     {
         return $this->userInfo()->create($attributes);
@@ -133,12 +163,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->userInfo()->exists();
     }
 
-    public function system_error()
+    public function systemErrors(): HasMany
     {
         return $this->hasMany(SystemError::class);
     }
 
-    public function emails()
+    /**
+     * @return MorphMany<Email, $this>
+     */
+    public function emails(): MorphMany
     {
         return $this->morphMany(Email::class, 'emailable');
     }
@@ -148,22 +181,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->emails()->create(['label' => $label, 'email' => $email, 'is_primary' => true]);
     }
 
-    public function phones()
+    /**
+     * @return MorphMany<Phone, $this>
+     */
+    public function phones(): MorphMany
     {
         return $this->morphMany(Phone::class, 'phoneable');
     }
 
-    public function createPrimaryPhone(string $prefix, string $number, LabelPhone $label): ?Phone
+    public function createPrimaryPhone(string $prefix, string $number, LabelPhone $label): Phone
     {
         return $this->phones()->create(['label' => $label, 'prefix' => $prefix, 'number' => $number, 'is_primary' => true]);
     }
 
-    public function addresses()
+    /**
+     * @return MorphMany<Address, $this>
+     */
+    public function addresses(): MorphMany
     {
         return $this->morphMany(Address::class, 'addressable');
     }
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
@@ -173,14 +212,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->roles()->where('name', $role->value)->exists();
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function hasAnyRole(array $roles): bool
     {
         return $this->roles()->whereIn('name', $roles)->exists();
     }
 
+    /**
+     * @return array<string>
+     */
     public function getRoles(): array
     {
-        return $this->roles->pluck('name')->map(fn (IdentityRole $role) => $role->value)->toArray();
+        return $this->roles->map(fn(Role $role) => $role->name->value)->toArray();
     }
 
     public function isAdmin(): bool

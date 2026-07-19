@@ -3,9 +3,14 @@
 namespace App\Models\Identity;
 
 use App\Enum\Identity\IdentityRole;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+
+/**
+ * @property IdentityRole $name
+ */
 class Role extends Model
 {
     use HasFactory;
@@ -19,7 +24,7 @@ class Role extends Model
         ];
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

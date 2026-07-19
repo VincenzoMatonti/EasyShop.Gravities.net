@@ -6,7 +6,13 @@ use App\Enum\Catalog\Currency;
 use App\Enum\Order\OrderStatus;
 use App\Models\Customer\CustomerProfile;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property OrderStatus $status
+ * @property Currency $currency
+ */
 class Order extends Model
 {
     protected $fillable = [
@@ -41,12 +47,12 @@ class Order extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function customerProfile()
+    public function customerProfile(): BelongsTo
     {
         return $this->belongsTo(CustomerProfile::class);
     }
 
-    public function items()
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
