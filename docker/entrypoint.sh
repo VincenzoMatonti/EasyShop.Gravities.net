@@ -41,11 +41,17 @@ php artisan optimize:clear
 
 echo "Building Laravel cache..."
 
+echo "MYSQL_ATTR_SSL_CA:"
+echo "$MYSQL_ATTR_SSL_CA"
+
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
 
+php artisan tinker --execute="
+var_dump(config('database.connections.mysql.options'));
+"
 
 php artisan storage:link || true
 
