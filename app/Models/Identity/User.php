@@ -19,11 +19,11 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -151,7 +151,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param array<string,mixed> $attributes
+     * @param  array<string,mixed>  $attributes
      */
     public function createUserInfo(array $attributes): UserInfo
     {
@@ -216,7 +216,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @param array<string> $roles
+     * @param  array<string>  $roles
      */
     public function hasAnyRole(array $roles): bool
     {
@@ -228,7 +228,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getRoles(): array
     {
-        return $this->roles->map(fn(Role $role) => $role->name->value)->toArray();
+        return $this->roles->map(fn (Role $role) => $role->name->value)->toArray();
     }
 
     public function isAdmin(): bool
