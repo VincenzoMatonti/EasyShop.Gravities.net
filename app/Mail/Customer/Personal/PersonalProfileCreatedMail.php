@@ -2,6 +2,7 @@
 
 namespace App\Mail\Customer\Personal;
 
+use App\Services\Mail\Manager\MailProfileService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -24,6 +25,7 @@ class PersonalProfileCreatedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            from: resolve(MailProfileService::class)->default(),
             subject: 'Profilo personale creato correttamente',
         );
     }

@@ -115,4 +115,33 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    'profiles' => [
+
+        'default' => [
+            'address' => env('MAIL_FROM_ADDRESS'),
+            'name' => env('MAIL_FROM_NAME'),
+        ],
+
+        'support' => [
+            'address' => env('MAIL_SUPPORT_ADDRESS', env('MAIL_FROM_ADDRESS')),
+            'name' => env('MAIL_SUPPORT_NAME', env('MAIL_FROM_NAME')),
+        ],
+
+        'marketing' => [
+            'address' => env('MAIL_MARKETING_ADDRESS', env('MAIL_FROM_ADDRESS')),
+            'name' => env('MAIL_MARKETING_NAME', env('MAIL_FROM_NAME')),
+        ],
+
+        'orders' => [
+            'address' => env('MAIL_ORDERS_ADDRESS', env('MAIL_FROM_ADDRESS')),
+            'name' => env('MAIL_ORDERS_NAME', env('MAIL_FROM_NAME')),
+        ],
+
+        'billing' => [
+            'address' => env('MAIL_BILLING_ADDRESS', env('MAIL_FROM_ADDRESS')),
+            'name' => env('MAIL_BILLING_NAME', env('MAIL_FROM_NAME')),
+        ],
+
+    ],
+
 ];
