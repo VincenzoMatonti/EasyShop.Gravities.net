@@ -20,8 +20,17 @@
 /public/storage
 /storage/*.key
 /storage/pail
+# Laravel runtime generated files
+/storage/framework/*
+!/storage/framework/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
 /vendor
 _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+docker/secrets/*.pem
+docker/*.env

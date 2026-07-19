@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Customer\Shared;
 
-use App\Http\Controllers\Controller;
 use App\Actions\Customer\Shared\SwitchCustomerProfileAction;
-use App\Queries\Customer\Shared\SelectState\GetActiveCustomerProfilesQuery;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\Shared\SwitchCustomerProfileRequest;
 use App\Queries\Customer\Shared\EntryState\GetCustomerEntryStateQuery;
+use App\Queries\Customer\Shared\SelectState\GetActiveCustomerProfilesQuery;
 
 class CustomerProfileController extends Controller
 {
@@ -23,7 +23,6 @@ class CustomerProfileController extends Controller
 
         return view('customer.shared.select', compact('profiles'));
     }
-
 
     public function switch(SwitchCustomerProfileRequest $request, SwitchCustomerProfileAction $action)
     {

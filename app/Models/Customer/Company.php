@@ -4,7 +4,6 @@ namespace App\Models\Customer;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class Company extends Model
 {
     protected $fillable = [
@@ -13,7 +12,7 @@ class Company extends Model
         'tax_code',
         'pec',
         'sdi_code',
-        'website'
+        'website',
     ];
 
     public function customerProfiles()

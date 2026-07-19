@@ -9,6 +9,7 @@ class LoginResponse implements LoginResponseContract
     public function toResponse($request)
     {
         $user = $request->user();
+
         return redirect()->route($user->homeRoute());
     }
 }

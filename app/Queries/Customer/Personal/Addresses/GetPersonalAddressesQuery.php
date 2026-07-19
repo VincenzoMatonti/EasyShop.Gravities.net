@@ -14,28 +14,25 @@ class GetPersonalAddressesQuery
         private readonly CustomerContextService $context,
     ) {}
 
-
     public function execute(): PersonalAddressesViewModel
     {
         $profile = $this->context->current();
 
-        if (!$profile) {
+        if (! $profile) {
             abort(403);
         }
 
         $addresses = $profile->addresses()->where('is_deleted', false)->get();
 
-        $shippingAddresses = $addresses->filter(fn(Address $address) => $address->label === LabelAddress::Shipping)->map($this->mapAddress(...))->values()->toArray();
+        $shippingAddresses = $addresses->filter(fn (Address $address) => $address->label === LabelAddress::Shipping)->map($this->mapAddress(...))->values()->toArray();
 
-        $billingAddresses = $addresses->filter(fn(Address $address) => $address->label === LabelAddress::Billing)->map($this->mapAddress(...))->values()->toArray();
+        $billingAddresses = $addresses->filter(fn (Address $address) => $address->label === LabelAddress::Billing)->map($this->mapAddress(...))->values()->toArray();
 
         return new PersonalAddressesViewModel(
             shippingAddresses: $shippingAddresses,
             billingAddresses: $billingAddresses,
         );
     }
-
-
 
     private function mapAddress(Address $address): array
     {
@@ -64,7 +61,7 @@ class GetPersonalAddressesQuery
                 ],
             ],
 
-            'badge' => $address->is_default ? ['label' => 'Indirizzo predefinito', 'type' => PersonalProfileBadgeType::Success,] : null,
+            'badge' => $address->is_default ? ['label' => 'Indirizzo predefinito', 'type' => PersonalProfileBadgeType::Success] : null,
         ];
     }
 }

@@ -12,8 +12,7 @@ class EmptyState extends Component
         public readonly string $title,
         public readonly ?string $description = null,
         public readonly string $icon = '📭',
-    ) {
-    }
+    ) {}
 
     /**
      * Get the view / contents that represent the component.

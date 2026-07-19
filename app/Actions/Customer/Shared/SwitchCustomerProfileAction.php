@@ -11,7 +11,7 @@ class SwitchCustomerProfileAction
 
     public function execute(SwitchCustomerProfileData $data): void
     {
-        if (!$data->user->hasCustomerProfile($data->customerProfileId)) {
+        if (! $data->user->hasCustomerProfile($data->customerProfileId)) {
             abort(403);
         }
 

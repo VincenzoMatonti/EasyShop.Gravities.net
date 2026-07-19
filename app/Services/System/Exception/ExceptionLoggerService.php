@@ -2,9 +2,9 @@
 
 namespace App\Services\System\Exception;
 
-use Throwable;
 use App\Models\System\SystemError;
 use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class ExceptionLoggerService
 {

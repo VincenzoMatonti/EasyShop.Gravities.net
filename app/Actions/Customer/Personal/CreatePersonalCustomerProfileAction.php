@@ -2,14 +2,14 @@
 
 namespace App\Actions\Customer\Personal;
 
-use Throwable;
-use Illuminate\Support\Facades\DB;
-use App\Models\Customer\CustomerProfile;
-use App\Events\Customer\Personal\PersonalCustomerProfileCreated;
 use App\Dtos\Customer\Personal\CreatePersonalCustomerProfileData;
-use App\Rules\Customer\Personal\CustomerPersonalProfileDomainService;
-use App\Exceptions\Customer\Personal\PersonalProfileCreationException;
+use App\Events\Customer\Personal\PersonalCustomerProfileCreated;
 use App\Exceptions\Customer\Personal\PersonalCustomerProfileAlreadyExistsException;
+use App\Exceptions\Customer\Personal\PersonalProfileCreationException;
+use App\Models\Customer\CustomerProfile;
+use App\Rules\Customer\Personal\CustomerPersonalProfileDomainService;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CreatePersonalCustomerProfileAction
 {

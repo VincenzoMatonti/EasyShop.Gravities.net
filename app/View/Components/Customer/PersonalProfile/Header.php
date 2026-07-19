@@ -11,7 +11,7 @@ class Header extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public readonly string $title, public readonly ?string $subtitle = null,) {}
+    public function __construct(public readonly string $title, public readonly ?string $subtitle = null) {}
 
     /**
      * Get the view / contents that represent the component.

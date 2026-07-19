@@ -16,7 +16,7 @@ class CustomerContextService
     public function has(User $user): bool
     {
         $customerProfileId = $this->currentId();
-        
+
         return $customerProfileId !== null && $user->hasCustomerProfile($customerProfileId);
     }
 
