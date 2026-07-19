@@ -14,14 +14,13 @@ use App\Models\Customer\Email;
 use App\Models\Customer\Phone;
 use App\Models\Customer\UserCustomerProfile;
 use App\Models\Customer\UserInfo;
-use App\Models\Identity\Role;
 use App\Models\System\SystemError;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 /**
  * @property int $id
@@ -36,12 +35,12 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'email',
         'password',
-        'is_deleted'
+        'is_deleted',
     ];
 
     protected $hidden = [
         'password',
-        'remember_token'
+        'remember_token',
     ];
 
     /**
@@ -74,9 +73,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
-    public function attachCustomerProfile(CustomerProfile $profile, bool $isDefault = false,): void
+    public function attachCustomerProfile(CustomerProfile $profile, bool $isDefault = false): void
     {
-        $this->customerProfiles()->attach($profile, ['role' => null, 'is_default' => $isDefault,]);
+        $this->customerProfiles()->attach($profile, ['role' => null, 'is_default' => $isDefault]);
     }
 
     public function activeCustomerProfiles()
@@ -144,9 +143,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Email::class, 'emailable');
     }
 
-    public function createPrimaryEmail(string $email, LabelEmail $label,): Email
+    public function createPrimaryEmail(string $email, LabelEmail $label): Email
     {
-        return $this->emails()->create(['label' => $label, 'email' => $email, 'is_primary' => true,]);
+        return $this->emails()->create(['label' => $label, 'email' => $email, 'is_primary' => true]);
     }
 
     public function phones()
@@ -154,9 +153,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Phone::class, 'phoneable');
     }
 
-    public function createPrimaryPhone(string $prefix, string $number, LabelPhone $label,): ?Phone
+    public function createPrimaryPhone(string $prefix, string $number, LabelPhone $label): ?Phone
     {
-        return $this->phones()->create(['label' => $label, 'prefix' => $prefix, 'number' => $number, 'is_primary' => true,]);
+        return $this->phones()->create(['label' => $label, 'prefix' => $prefix, 'number' => $number, 'is_primary' => true]);
     }
 
     public function addresses()
@@ -181,7 +180,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getRoles(): array
     {
-        return $this->roles->pluck('name')->map(fn(IdentityRole $role) => $role->value)->toArray();
+        return $this->roles->pluck('name')->map(fn (IdentityRole $role) => $role->value)->toArray();
     }
 
     public function isAdmin(): bool

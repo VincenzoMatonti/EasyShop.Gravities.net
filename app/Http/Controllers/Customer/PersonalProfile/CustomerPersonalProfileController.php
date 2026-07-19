@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Customer\PersonalProfile;
 
-use App\Http\Controllers\Controller;
 use App\Actions\Customer\Personal\CreatePersonalCustomerProfileAction;
-use App\Exceptions\Customer\Personal\PersonalCustomerProfileAlreadyExistsException;
-use App\Exceptions\Customer\Personal\PersonalProfileCreationException;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\Personal\CreatePersonalCustomerProfileRequest;
 
 class CustomerPersonalProfileController extends Controller

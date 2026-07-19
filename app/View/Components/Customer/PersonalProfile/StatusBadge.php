@@ -17,12 +17,13 @@ class StatusBadge extends Component
     public function cssClass(): string
     {
         return match ($this->type) {
-            PersonalProfileBadgeType::Success   => 'bg-success',
-            PersonalProfileBadgeType::Warning   => 'bg-warning text-dark',
-            PersonalProfileBadgeType::Danger    => 'bg-danger',
+            PersonalProfileBadgeType::Success => 'bg-success',
+            PersonalProfileBadgeType::Warning => 'bg-warning text-dark',
+            PersonalProfileBadgeType::Danger => 'bg-danger',
             PersonalProfileBadgeType::Secondary => 'bg-secondary',
         };
     }
+
     /**
      * Get the view / contents that represent the component.
      */

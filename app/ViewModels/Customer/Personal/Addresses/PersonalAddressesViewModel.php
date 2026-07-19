@@ -9,18 +9,15 @@ class PersonalAddressesViewModel
         public readonly array $billingAddresses,
     ) {}
 
-
     public function headerTitle(): string
     {
         return 'Indirizzi personali';
     }
 
-
     public function headerSubtitle(): string
     {
         return 'Consulta e gestisci gli indirizzi del tuo account.';
     }
-
 
     public function sections(): array
     {
@@ -38,30 +35,25 @@ class PersonalAddressesViewModel
         ];
     }
 
-
     public function hasAddresses(array $addresses): bool
     {
-        return !empty($addresses);
+        return ! empty($addresses);
     }
-
 
     public function emptyTitle(): string
     {
         return 'Nessun indirizzo disponibile';
     }
 
-
     public function emptyDescription(): string
     {
         return 'Aggiungi un indirizzo per completare il tuo profilo.';
     }
 
-
     private function shippingSectionTitle(): string
     {
         return 'Indirizzi di spedizione';
     }
-
 
     private function billingSectionTitle(): string
     {

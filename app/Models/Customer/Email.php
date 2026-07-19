@@ -3,10 +3,8 @@
 namespace App\Models\Customer;
 
 use App\Enum\Customer\LabelEmail;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
-
+use Illuminate\Database\Eloquent\Model;
 
 class Email extends Model
 {

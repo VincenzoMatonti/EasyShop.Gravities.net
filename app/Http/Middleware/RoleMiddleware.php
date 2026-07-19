@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Identity\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\Identity\User;
 
 class RoleMiddleware
 {
@@ -20,7 +20,7 @@ class RoleMiddleware
         /** @var User $user */
         $user = Auth::user();
 
-        if (!$user->hasAnyRole($roles)) {
+        if (! $user->hasAnyRole($roles)) {
             return redirect()->route($user->homeRoute());
         }
 

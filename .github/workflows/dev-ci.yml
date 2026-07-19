@@ -1,0 +1,136 @@
+name: CI DEV
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  ci:
+    name: DEV Code Validation
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.4
+
+        env:
+          MYSQL_DATABASE: ecommerce_test
+          MYSQL_USER: sail
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+
+        ports:
+          - 3306:3306
+
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+      redis:
+        image: redis:7
+
+        ports:
+          - 6379:6379
+
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: ecommerce_test
+      DB_USERNAME: sail
+      DB_PASSWORD: password
+
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_URL: ""
+
+      MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
+      MAIL_SCHEME: ${{ secrets.MAIL_SCHEME }}
+      MAIL_HOST: ${{ secrets.MAIL_HOST }}
+      MAIL_PORT: ${{ secrets.MAIL_PORT }}
+      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      MAIL_ENCRYPTION: ${{ secrets.MAIL_ENCRYPTION }}
+      MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
+      MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: mbstring,bcmath,pdo_mysql
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Create Laravel environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Show Redis environment
+        run: |
+          env | grep REDIS
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Run database migrations
+        run: php artisan migrate --force
+
+      - name: Check database connection
+        run: php artisan migrate:status
+
+      - name: Check Redis connection
+        run: |
+          env | grep REDIS
+          php artisan tinker --execute="dump(config('database.redis.default')); dump(app('redis')->ping());"
+
+      - name: Check mail configuration
+        run: |
+          php artisan tinker --execute="dump(config('mail.mailers.smtp.host'));"
+
+      - name: Run Laravel tests
+        run: php artisan test
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
+
+      - name: Verify Laravel optimization
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache

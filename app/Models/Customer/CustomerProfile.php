@@ -106,8 +106,8 @@ class CustomerProfile extends Model
         return $query->where('type', CustomerProfileType::personal);
     }
 
-    public static function createPersonal(string $name, string $surname,): self
+    public static function createPersonal(string $name, string $surname): self
     {
-        return self::create(['name' => trim("{$name} {$surname}"), 'type' => CustomerProfileType::personal,]);
+        return self::create(['name' => trim("{$name} {$surname}"), 'type' => CustomerProfileType::personal]);
     }
 }

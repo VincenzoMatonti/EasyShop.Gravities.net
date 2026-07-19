@@ -5,12 +5,13 @@ namespace App\Models\Cart;
 use App\Enum\Cart\CartStatus;
 use App\Models\Customer\CustomerProfile;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read \Illuminate\Database\Eloquent\Collection<int, CartItem> $items
+ * @property-read Collection<int, CartItem> $items
  */
 class Cart extends Model
 {
@@ -148,17 +149,17 @@ class Cart extends Model
 
     public function subtotal(): float
     {
-        return $this->items->sum(fn($item) => $item->subtotal());
+        return $this->items->sum(fn ($item) => $item->subtotal());
     }
 
     public function totalDiscount(): float
     {
-        return $this->items->sum(fn($item) => $item->totalDiscount());
+        return $this->items->sum(fn ($item) => $item->totalDiscount());
     }
 
     public function totalBeforeDiscount(): float
     {
-        return $this->items->sum(fn($item) => $item->totalBeforeDiscount());
+        return $this->items->sum(fn ($item) => $item->totalBeforeDiscount());
     }
 
     public function total(): float
