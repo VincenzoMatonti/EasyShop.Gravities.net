@@ -14,6 +14,7 @@ mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
+    storage/certs \
     bootstrap/cache
 
 
@@ -23,11 +24,18 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
 
-echo "Checking Render TiDB certificate..."
+echo "Preparing TiDB CA certificate..."
 
 if [ -e /etc/secrets/tidb-ca.pem ]; then
     echo "TiDB CA certificate found"
-    ls -la /etc/secrets/tidb-ca.pem
+
+    cp /etc/secrets/tidb-ca.pem storage/certs/tidb-ca.pem
+
+    chown www-data:www-data storage/certs/tidb-ca.pem
+    chmod 640 storage/certs/tidb-ca.pem
+
+    echo "Runtime TiDB CA certificate:"
+    ls -la storage/certs/tidb-ca.pem
 else
     echo "WARNING: TiDB CA certificate missing"
 fi
@@ -41,26 +49,14 @@ php artisan optimize:clear
 
 echo "Building Laravel cache..."
 
-echo "MYSQL_ATTR_SSL_CA:"
-echo "$MYSQL_ATTR_SSL_CA"
-
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
 
-php artisan tinker --execute="
-var_dump(config('database.connections.mysql.options'));
-"
 
 php artisan storage:link || true
 
-echo "Checking certificate access as www-data..."
-
-su -s /bin/bash www-data -c "
-ls -l /etc/secrets/tidb-ca.pem
-head -n 2 /etc/secrets/tidb-ca.pem
-"
 
 echo "Checking DB as www-data..."
 
