@@ -78,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return BelongsToMany<CustomerProfile, UserCustomerProfile>
+     * @return BelongsToMany<CustomerProfile, $this, UserCustomerProfile>
      */
     public function customerProfiles(): BelongsToMany
     {
@@ -94,7 +94,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return BelongsToMany<CustomerProfile,  $this>
+     * @return BelongsToMany<CustomerProfile, $this, UserCustomerProfile>
      */
     public function activeCustomerProfiles(): BelongsToMany
     {
@@ -102,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return BelongsToMany<CustomerProfile,  $this>
+     * @return BelongsToMany<CustomerProfile, $this, UserCustomerProfile>
      */
     public function defaultCustomerProfile(): BelongsToMany
     {
@@ -132,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDefaultCustomerProfile(): ?CustomerProfile
     {
         /**
-         * @return BelongsToMany<CustomerProfile, User>
+         * @return BelongsToMany<CustomerProfile, $this>
          */
         return $this->defaultCustomerProfile()->first();
     }
@@ -202,6 +202,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Address::class, 'addressable');
     }
 
+    /**
+     * @return BelongsToMany<Role, $this>
+     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
