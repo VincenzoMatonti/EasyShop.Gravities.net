@@ -6,6 +6,18 @@ use App\Enum\Customer\LabelAddress;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property LabelAddress $label
+ * @property string $street
+ * @property string $number
+ * @property string $zip_code
+ * @property string $city
+ * @property string|null $province
+ * @property string $country
+ * @property bool $is_default
+ * @property bool $is_deleted
+ */
 class Address extends Model
 {
     protected $fillable = [

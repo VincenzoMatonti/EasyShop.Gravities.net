@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property-read Collection<int, CartItem> $items
+ * @property CartStatus $status
  */
 class Cart extends Model
 {
