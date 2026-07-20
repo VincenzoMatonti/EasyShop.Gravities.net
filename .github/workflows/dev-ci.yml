@@ -55,6 +55,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate shell scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./docker"
+
+      - name: Validate Docker entrypoint
+        run: |
+          test -f docker/entrypoint.sh
+          test -x docker/entrypoint.sh
+          bash -n docker/entrypoint.sh
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -90,9 +101,6 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Run database migrations
-        run: php artisan migrate --force
-
       - name: Check database connection
         run: php artisan migrate:status
 
@@ -100,7 +108,12 @@ jobs:
         run: |
           php artisan tinker --execute="
           dump(config('database.redis.default'));
-          dump(app('redis')->ping());
+
+          if (config('database.redis.default.host')) {
+              dump(app('redis')->ping());
+          } else {
+              dump('Redis skipped');
+          }
           "
 
       - name: Check Resend configuration

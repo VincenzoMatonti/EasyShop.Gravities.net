@@ -1,7 +1,6 @@
 # Render deploy flow
 name: Deploy DEV
 
-
 on:
   workflow_run:
     workflows:
@@ -9,18 +8,27 @@ on:
     types:
       - completed
 
-
 jobs:
-
-  deploy:
+  deploy-web:
+    name: Deploy DEV Web
 
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     runs-on: ubuntu-latest
 
-
     steps:
-
       - name: Trigger Render deploy
         run: |
           curl -X POST "${{ secrets.RENDER_DEV_DEPLOY_HOOK }}"
+
+  deploy-worker:
+    name: Deploy DEV Worker
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render worker deploy
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEV_WORKER_DEPLOY_HOOK }}"
