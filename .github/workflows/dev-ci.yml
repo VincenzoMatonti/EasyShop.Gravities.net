@@ -101,7 +101,10 @@ jobs:
       - name: Build frontend
         run: npm run build
 
-      - name: Check database connection
+      - name: Run database migrations
+        run: php artisan migrate --force
+
+      - name: Check database migration status
         run: php artisan migrate:status
 
       - name: Check Redis connection
