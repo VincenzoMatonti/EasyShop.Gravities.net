@@ -97,7 +97,7 @@ jobs:
 
           echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
 
-          chmod 600 tidb-ca.pem
+          chmod 644 tidb-ca.pem
 
       # Upload TiDB Certificate
       - name: Upload TiDB Certificate
