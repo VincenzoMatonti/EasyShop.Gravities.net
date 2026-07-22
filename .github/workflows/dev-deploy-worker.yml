@@ -57,7 +57,7 @@ jobs:
 
         run: |
 
-          cp worker.env.example worker.env
+          cp infra/oracle/worker/worker.env.example worker.env
 
           sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" worker.env
           sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" worker.env
