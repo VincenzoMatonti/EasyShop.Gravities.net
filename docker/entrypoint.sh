@@ -6,40 +6,74 @@ echo "Starting Laravel..."
 
 cd /var/www/html
 
+echo "Preparing runtime directories..."
 
-# Laravel directories
-mkdir -p storage/logs
-mkdir -p storage/framework/cache
-mkdir -p storage/framework/sessions
-mkdir -p storage/framework/views
-mkdir -p bootstrap/cache
+mkdir -p \
+    storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/certs \
+    bootstrap/cache
 
+echo "Applying permissions..."
 
-# Permissions
 chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
+echo "Preparing TiDB certificate..."
 
-# Clear old cache
-php artisan config:clear || true
+if [ -f /etc/secrets/tidb-ca.pem ]; then
+    cp /etc/secrets/tidb-ca.pem storage/certs/tidb-ca.pem
+    chown www-data:www-data storage/certs/tidb-ca.pem
+    chmod 640 storage/certs/tidb-ca.pem
+    echo "TiDB certificate ready"
+else
+    echo "WARNING: TiDB certificate not found"
+fi
 
+echo "Building Laravel cache..."
 
-# Clear old cache
 php artisan optimize:clear
 
-# Build production cache
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan event:cache
 
-
-# Storage
 php artisan storage:link || true
 
-echo "Checking DB..."
+APP_ROLE="${APP_ROLE:-web}"
 
-php artisan tinker --execute="echo config('database.connections.mysql.host');DB::connection()->getPdo();echo ' DB OK';"
+echo "Application role: ${APP_ROLE}"
 
-echo "Laravel ready"
+case "${APP_ROLE}" in
 
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+    web)
+
+        echo "Starting Web..."
+
+        exec /usr/bin/supervisord \
+            -c /etc/supervisor/conf.d/supervisord.conf
+        ;;
+
+    worker)
+
+        echo "Starting Queue Worker..."
+
+        exec php artisan queue:work \
+            redis \
+            --queue=default \
+            --sleep=3 \
+            --tries=5 \
+            --timeout=120 \
+            --max-time=3600
+        ;;
+
+    *)
+
+        echo "Unknown APP_ROLE: ${APP_ROLE}"
+        exit 1
+        ;;
+
+esac

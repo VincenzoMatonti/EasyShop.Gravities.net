@@ -1,0 +1,178 @@
+name: Deploy DEV Worker
+
+on:
+  workflow_run:
+    workflows:
+      - CI DEV
+    types:
+      - completed
+
+jobs:
+  deploy-worker:
+    environment: worker.dev
+    name: Deploy DEV Worker
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Login GHCR
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Worker Image
+        run: |
+
+          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
+          docker build \
+            -f docker/Dockerfile \
+            -t ghcr.io/$IMAGE_NAME/easyshop-app:dev .
+
+      # Push Worker Image
+      - name: Push Worker Image
+        run: |
+
+          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
+          docker push \
+            ghcr.io/$IMAGE_NAME/easyshop-app:dev
+
+      # Generate Worker ENV
+      - name: Generate Worker ENV
+
+        run: |
+
+          cp infra/oracle/worker/worker.env.example worker.env
+
+          sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" worker.env
+          sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" worker.env
+
+          sed -i "s|^DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" worker.env
+          sed -i "s|^DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" worker.env
+          sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" worker.env
+          sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" worker.env
+          sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" worker.env
+
+          sed -i "s|^REDIS_HOST=.*|REDIS_HOST=${{ secrets.REDIS_HOST }}|" worker.env
+          sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}|" worker.env
+          sed -i "s|^REDIS_PORT=.*|REDIS_PORT=${{ secrets.REDIS_PORT }}|" worker.env
+          sed -i "s|^REDIS_USERNAME=.*|REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}|" worker.env
+          sed -i "s|^REDIS_SCHEME=.*|REDIS_SCHEME=${{ secrets.REDIS_SCHEME }}|" worker.env
+
+          sed -i "s|^RESEND_API_KEY=.*|RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}|" worker.env
+          
+          sed -i "s|^MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_SUPPORT_ADDRESS=.*|MAIL_SUPPORT_ADDRESS=${{ secrets.MAIL_SUPPORT_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_SUPPORT_NAME=.*|MAIL_SUPPORT_NAME=${{ secrets.MAIL_SUPPORT_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_MARKETING_ADDRESS=.*|MAIL_MARKETING_ADDRESS=${{ secrets.MAIL_MARKETING_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_MARKETING_NAME=.*|MAIL_MARKETING_NAME=${{ secrets.MAIL_MARKETING_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_ORDERS_ADDRESS=.*|MAIL_ORDERS_ADDRESS=${{ secrets.MAIL_ORDERS_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_ORDERS_NAME=.*|MAIL_ORDERS_NAME=${{ secrets.MAIL_ORDERS_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_BILLING_ADDRESS=.*|MAIL_BILLING_ADDRESS=${{ secrets.MAIL_BILLING_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_BILLING_NAME=.*|MAIL_BILLING_NAME=${{ secrets.MAIL_BILLING_NAME }}|" worker.env
+
+      # Upload Worker ENV
+      - name: Upload Worker ENV
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: worker.env
+
+          target: /tmp
+
+      # Generate TiDB Certificate
+      - name: Generate TiDB Certificate
+
+        run: |
+
+          echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
+
+          chmod 644 tidb-ca.pem
+
+      # Upload TiDB Certificate
+      - name: Upload TiDB Certificate
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: tidb-ca.pem
+
+          target: /tmp
+
+      # Upload Deploy Script
+      - name: Upload Worker Deploy Script
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: scripts/deploy/worker.sh
+
+          target: /tmp
+
+      # Deploy Worker
+      - name: Deploy Worker on Oracle VM
+
+        uses: appleboy/ssh-action@v1.2.2
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          script: |
+
+            mkdir -p \
+              /var/www/easyshop-worker/shared/env \
+              /var/www/easyshop-worker/shared/certs
+
+
+            mv /tmp/worker.env \
+              /var/www/easyshop-worker/shared/env/.env
+
+
+            mv /tmp/tidb-ca.pem \
+              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
+
+
+            chmod 640 \
+              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
+
+
+            chmod +x /tmp/scripts/deploy/worker.sh
+
+
+            /tmp/scripts/deploy/worker.sh \
+              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:dev
