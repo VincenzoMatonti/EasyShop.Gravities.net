@@ -67,8 +67,11 @@ RUN docker-php-ext-configure gd \
     zip
 
 
-# Redis PHP extension (phpredis)
-RUN pecl install redis \
+# Redis PHP extension
+RUN apt-get update && apt-get install -y \
+    libz-dev \
+    && pecl channel-update pecl.php.net \
+    && pecl install redis \
     && docker-php-ext-enable redis
 
 # PHP-FPM explicit runtime user

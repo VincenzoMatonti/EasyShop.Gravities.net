@@ -41,7 +41,7 @@ jobs:
 
           docker build \
             -f docker/Dockerfile \
-            -t ghcr.io/$IMAGE_NAME/worker:dev .
+            -t ghcr.io/$IMAGE_NAME/easyshop-app:dev .
 
       # Push Worker Image
       - name: Push Worker Image
@@ -50,7 +50,7 @@ jobs:
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
           docker push \
-            ghcr.io/$IMAGE_NAME/worker:dev
+            ghcr.io/$IMAGE_NAME/easyshop-app:dev
 
       # Generate Worker ENV
       - name: Generate Worker ENV
@@ -90,6 +90,29 @@ jobs:
 
           target: /tmp
 
+      # Generate TiDB Certificate
+      - name: Generate TiDB Certificate
+
+        run: |
+
+          echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
+
+          chmod 600 tidb-ca.pem
+
+      # Upload TiDB Certificate
+      - name: Upload TiDB Certificate
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: tidb-ca.pem
+
+          target: /tmp
+
       # Upload Deploy Script
       - name: Upload Worker Deploy Script
 
@@ -102,7 +125,8 @@ jobs:
 
           source: scripts/deploy/worker.sh
 
-          target: /tmp
+          target:
+            /tmp
 
       # Deploy Worker
       - name: Deploy Worker on Oracle VM
@@ -116,12 +140,25 @@ jobs:
 
           script: |
 
-            mkdir -p /var/www/easyshop-worker/shared/env
+            mkdir -p \
+              /var/www/easyshop-worker/shared/env \
+              /var/www/easyshop-worker/shared/certs
+
 
             mv /tmp/worker.env \
               /var/www/easyshop-worker/shared/env/.env
 
+
+            mv /tmp/tidb-ca.pem \
+              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
+
+
+            chmod 640 \
+              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
+
+
             chmod +x /tmp/scripts/deploy/worker.sh
 
+
             /tmp/scripts/deploy/worker.sh \
-             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/worker:dev
+              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/worker:dev

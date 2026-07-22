@@ -43,7 +43,9 @@ echo "Starting new worker container..."
 docker run -d \
     --name $CONTAINER_NAME \
     --restart unless-stopped \
-    --env-file $ENV_FILE \
+    --env-file /var/www/easyshop-worker/shared/env/.env \
+    -v /var/www/easyshop-worker/shared/storage:/var/www/html/storage \
+    -v /var/www/easyshop-worker/shared/certs:/etc/secrets \
     -e APP_ROLE=worker \
     $IMAGE
 
