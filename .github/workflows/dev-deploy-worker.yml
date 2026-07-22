@@ -125,8 +125,7 @@ jobs:
 
           source: scripts/deploy/worker.sh
 
-          target:
-            /tmp
+          target: /tmp
 
       # Deploy Worker
       - name: Deploy Worker on Oracle VM
@@ -161,4 +160,4 @@ jobs:
 
 
             /tmp/scripts/deploy/worker.sh \
-              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/worker:dev
+              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:dev
