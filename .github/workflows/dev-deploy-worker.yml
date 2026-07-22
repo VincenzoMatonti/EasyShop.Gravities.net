@@ -75,6 +75,21 @@ jobs:
           sed -i "s|^REDIS_SCHEME=.*|REDIS_SCHEME=${{ secrets.REDIS_SCHEME }}|" worker.env
 
           sed -i "s|^RESEND_API_KEY=.*|RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}|" worker.env
+          
+          sed -i "s|^MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_SUPPORT_ADDRESS=.*|MAIL_SUPPORT_ADDRESS=${{ secrets.MAIL_SUPPORT_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_SUPPORT_NAME=.*|MAIL_SUPPORT_NAME=${{ secrets.MAIL_SUPPORT_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_MARKETING_ADDRESS=.*|MAIL_MARKETING_ADDRESS=${{ secrets.MAIL_MARKETING_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_MARKETING_NAME=.*|MAIL_MARKETING_NAME=${{ secrets.MAIL_MARKETING_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_ORDERS_ADDRESS=.*|MAIL_ORDERS_ADDRESS=${{ secrets.MAIL_ORDERS_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_ORDERS_NAME=.*|MAIL_ORDERS_NAME=${{ secrets.MAIL_ORDERS_NAME }}|" worker.env
+
+          sed -i "s|^MAIL_BILLING_ADDRESS=.*|MAIL_BILLING_ADDRESS=${{ secrets.MAIL_BILLING_ADDRESS }}|" worker.env
+          sed -i "s|^MAIL_BILLING_NAME=.*|MAIL_BILLING_NAME=${{ secrets.MAIL_BILLING_NAME }}|" worker.env
 
       # Upload Worker ENV
       - name: Upload Worker ENV
