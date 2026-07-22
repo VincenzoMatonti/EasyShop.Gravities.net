@@ -34,12 +34,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build Worker Image
       - name: Build Worker Image
         run: |
+
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
           docker build \
+            -f docker/Dockerfile \
             -t ghcr.io/$IMAGE_NAME/worker:dev .
 
       # Push Worker Image
