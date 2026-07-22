@@ -37,6 +37,8 @@ WORKDIR /var/www/html
 
 
 RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    openssl \
     nginx \
     supervisor \
     unzip \
@@ -55,27 +57,42 @@ RUN apt-get update && apt-get install -y \
 
 # Laravel PHP extensions
 RUN docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
+    --with-freetype \
+    --with-jpeg \
     && docker-php-ext-install \
-        gd \
-        pdo_mysql \
-        bcmath \
-        intl \
-        zip
+    gd \
+    pdo_mysql \
+    bcmath \
+    intl \
+    zip
 
 
-# Redis PHP extension (phpredis)
-RUN pecl install redis \
+# Redis PHP extension
+RUN apt-get update && apt-get install -y \
+    libz-dev \
+    && pecl channel-update pecl.php.net \
+    && pecl install redis \
     && docker-php-ext-enable redis
 
+# PHP-FPM explicit runtime user
+RUN sed -i 's/^user = .*/user = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^group = .*/group = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^listen.owner = .*/listen.owner = www-data/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^listen.group = .*/listen.group = www-data/' /usr/local/etc/php-fpm.d/www.conf
 
-COPY . .
+# Application
+COPY --chown=www-data:www-data . .
 
 
-COPY --from=vendor /app/vendor ./vendor
+COPY --from=vendor \
+    --chown=www-data:www-data \
+    /app/vendor ./vendor
 
-COPY --from=frontend /app/public/build ./public/build
+
+COPY --from=frontend \
+    --chown=www-data:www-data \
+    /app/public/build ./public/build
+
 
 RUN rm -f public/hot
 
@@ -88,9 +105,13 @@ COPY docker/supervisor/supervisord.conf \
     /etc/supervisor/conf.d/supervisord.conf
 
 
-RUN chown -R www-data:www-data \
-    storage \
-    bootstrap/cache
+# Laravel writable folders
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+RUN mkdir -p /var/www/.config/psysh \
+    && chown -R www-data:www-data /var/www/.config
 
 
 EXPOSE 80

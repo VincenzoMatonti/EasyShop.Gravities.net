@@ -12,13 +12,20 @@
 vendor
 node_modules
 
-# Laravel cache
-bootstrap/cache/*
+# Laravel runtime
+storage/app/*
 storage/logs/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/testing/*
 storage/framework/views/*
+bootstrap/cache/*
+
+# Tests and docs
+tests
+coverage
+docs
+*.md
 
 # IDE
 .vscode
@@ -28,9 +35,6 @@ storage/framework/views/*
 .DS_Store
 Thumbs.db
 
-# Tests
-coverage
-.phpunit.result.cache
-
 # Docker
 compose.yml
+docker-compose.yml

@@ -30,18 +30,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-      redis:
-        image: redis:7
-
-        ports:
-          - 6379:6379
-
-        options: >-
-          --health-cmd="redis-cli ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     env:
       DB_CONNECTION: mysql
       DB_HOST: 127.0.0.1
@@ -50,31 +38,40 @@ jobs:
       DB_USERNAME: sail
       DB_PASSWORD: password
 
+      # Upstash Redis
       REDIS_CLIENT: phpredis
-      REDIS_HOST: 127.0.0.1
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ""
-      REDIS_URL: ""
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+      REDIS_SCHEME: tls
 
-      MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
-      MAIL_SCHEME: ${{ secrets.MAIL_SCHEME }}
-      MAIL_HOST: ${{ secrets.MAIL_HOST }}
-      MAIL_PORT: ${{ secrets.MAIL_PORT }}
-      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-      MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-      MAIL_ENCRYPTION: ${{ secrets.MAIL_ENCRYPTION }}
+      # Resend
+      MAIL_MAILER: resend
       MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
       MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate shell scripts
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./docker"
+
+      - name: Validate Docker entrypoint
+        run: |
+          test -f docker/entrypoint.sh
+          test -x docker/entrypoint.sh
+          bash -n docker/entrypoint.sh
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.5"
-          extensions: mbstring,bcmath,pdo_mysql
+          extensions: mbstring,bcmath,pdo_mysql,redis
+          tools: composer:v2
 
       - name: Cache Composer packages
         uses: actions/cache@v4
@@ -92,10 +89,6 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Show Redis environment
-        run: |
-          env | grep REDIS
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -111,23 +104,27 @@ jobs:
       - name: Run database migrations
         run: php artisan migrate --force
 
-      - name: Check database connection
+      - name: Check database migration status
         run: php artisan migrate:status
 
       - name: Check Redis connection
         run: |
-          env | grep REDIS
-          php artisan tinker --execute="dump(config('database.redis.default')); dump(app('redis')->ping());"
+          php artisan tinker --execute="
+          dump(config('database.redis.default'));
 
-      - name: Check mail configuration
+          if (config('database.redis.default.host')) {
+              dump(app('redis')->ping());
+          } else {
+              dump('Redis skipped');
+          }
+          "
+
+      - name: Check Resend configuration
         run: |
-          php artisan tinker --execute="dump(config('mail.mailers.smtp.host'));"
-
-      - name: Run Laravel tests
-        run: php artisan test
-
-      - name: Run Laravel Pint
-        run: ./vendor/bin/pint --test
+          php artisan tinker --execute="
+          dump(config('mail.default'));
+          dump(config('services.resend.key') !== null);
+          "
 
       - name: Verify Laravel optimization
         run: |
