@@ -1,0 +1,123 @@
+name: Deploy DEV Worker
+
+on:
+  workflow_run:
+    workflows:
+      - CI DEV
+    types:
+      - completed
+
+jobs:
+  deploy-worker:
+    environment: worker.dev
+    name: Deploy DEV Worker
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Login GHCR
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build Worker Image
+      - name: Build Worker Image
+
+        run: |
+          docker build \
+            -t ghcr.io/${{ github.repository_owner }}/worker:dev .
+
+      # Push Worker Image
+      - name: Push Worker Image
+
+        run: |
+          docker push \
+            ghcr.io/${{ github.repository_owner }}/easyshop-worker:dev
+
+      # Generate Worker ENV
+      - name: Generate Worker ENV
+
+        run: |
+
+          cp worker.env.example worker.env
+
+          sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" worker.env
+          sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" worker.env
+
+          sed -i "s|^DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" worker.env
+          sed -i "s|^DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" worker.env
+          sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" worker.env
+          sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" worker.env
+          sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" worker.env
+
+          sed -i "s|^REDIS_HOST=.*|REDIS_HOST=${{ secrets.REDIS_HOST }}|" worker.env
+          sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}|" worker.env
+          sed -i "s|^REDIS_PORT=.*|REDIS_PORT=${{ secrets.REDIS_PORT }}|" worker.env
+          sed -i "s|^REDIS_USERNAME=.*|REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}|" worker.env
+          sed -i "s|^REDIS_SCHEME=.*|REDIS_SCHEME=${{ secrets.REDIS_SCHEME }}|" worker.env
+
+          sed -i "s|^RESEND_API_KEY=.*|RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}|" worker.env
+
+      # Upload Worker ENV
+      - name: Upload Worker ENV
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: worker.env
+
+          target: /tmp
+
+      # Upload Deploy Script
+      - name: Upload Worker Deploy Script
+
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          source: scripts/deploy/worker.sh
+
+          target: /tmp
+
+      # Deploy Worker
+      - name: Deploy Worker on Oracle VM
+
+        uses: appleboy/ssh-action@v1.2.2
+
+        with:
+          host: ${{ secrets.ORACLE_DEV_HOST }}
+          username: deploy
+          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+
+          script: |
+
+            mkdir -p /var/www/easyshop-worker/shared/env
+
+            mv /tmp/worker.env \
+              /var/www/easyshop-worker/shared/env/.env
+
+            chmod +x /tmp/scripts/deploy/worker.sh
+
+            /tmp/scripts/deploy/worker.sh \
+              ghcr.io/${{ github.repository_owner }}/easyshop-worker:dev
