@@ -36,17 +36,20 @@ jobs:
 
       # Build Worker Image
       - name: Build Worker Image
-
         run: |
+          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
           docker build \
-            -t ghcr.io/${{ github.repository_owner }}/worker:dev .
+            -t ghcr.io/$IMAGE_NAME/worker:dev .
 
       # Push Worker Image
       - name: Push Worker Image
-
         run: |
+
+          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
           docker push \
-            ghcr.io/${{ github.repository_owner }}/easyshop-worker:dev
+            ghcr.io/$IMAGE_NAME/worker:dev
 
       # Generate Worker ENV
       - name: Generate Worker ENV
@@ -120,4 +123,4 @@ jobs:
             chmod +x /tmp/scripts/deploy/worker.sh
 
             /tmp/scripts/deploy/worker.sh \
-              ghcr.io/${{ github.repository_owner }}/easyshop-worker:dev
+             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/worker:dev
