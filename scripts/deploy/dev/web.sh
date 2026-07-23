@@ -38,7 +38,7 @@ docker run -d \
     -v /var/www/easyshop-web/shared/storage:/var/www/html/storage \
     -v /var/www/easyshop-web/shared/certs:/etc/secrets \
     -e APP_ROLE=web \
-    -p 80:8080 \
+    -p 80:80 \
     $IMAGE
 
 echo "Cleaning old images..."
