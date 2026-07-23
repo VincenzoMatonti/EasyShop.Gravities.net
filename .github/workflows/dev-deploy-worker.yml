@@ -57,7 +57,10 @@ jobs:
 
         run: |
 
-          cp infra/oracle/worker/worker.env.example worker.env
+          cat \
+          infra/oracle/dev/env/base.env.example \
+          infra/oracle/dev/env/worker.env.example \
+          > worker.env
 
           sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" worker.env
           sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" worker.env
@@ -74,8 +77,23 @@ jobs:
           sed -i "s|^REDIS_USERNAME=.*|REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}|" worker.env
           sed -i "s|^REDIS_SCHEME=.*|REDIS_SCHEME=${{ secrets.REDIS_SCHEME }}|" worker.env
 
+          sed -i "s|^FILESYSTEM_DISK=.*|FILESYSTEM_DISK=s3|" worker.env
+
+          sed -i "s|^AWS_ACCESS_KEY_ID=.*|AWS_ACCESS_KEY_ID=${{ secrets.R2_ACCESS_KEY_ID }}|" worker.env
+          sed -i "s|^AWS_SECRET_ACCESS_KEY=.*|AWS_SECRET_ACCESS_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}|" worker.env
+
+          sed -i "s|^AWS_DEFAULT_REGION=.*|AWS_DEFAULT_REGION=auto|" worker.env
+
+          sed -i "s|^AWS_BUCKET=.*|AWS_BUCKET=${{ secrets.R2_BUCKET }}|" worker.env
+
+          sed -i "s|^AWS_ENDPOINT=.*|AWS_ENDPOINT=${{ secrets.R2_ENDPOINT }}|" worker.env
+
+          sed -i "s|^AWS_URL=.*|AWS_URL=${{ secrets.R2_ENDPOINT }}/${{ secrets.R2_BUCKET }}|" worker.env
+
+          sed -i "s|^AWS_USE_PATH_STYLE_ENDPOINT=.*|AWS_USE_PATH_STYLE_ENDPOINT=true|" worker.env
+
           sed -i "s|^RESEND_API_KEY=.*|RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}|" worker.env
-          
+
           sed -i "s|^MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}|" worker.env
           sed -i "s|^MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}|" worker.env
 
@@ -138,7 +156,7 @@ jobs:
           username: deploy
           key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
 
-          source: scripts/deploy/worker.sh
+          source: scripts/deploy/dev/worker.sh
 
           target: /tmp
 
@@ -171,8 +189,8 @@ jobs:
               /var/www/easyshop-worker/shared/certs/tidb-ca.pem
 
 
-            chmod +x /tmp/scripts/deploy/worker.sh
+            chmod +x /tmp/scripts/deploy/dev/worker.sh
 
 
-            /tmp/scripts/deploy/worker.sh \
+            /tmp/scripts/deploy/dev/worker.sh \
               ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:dev
