@@ -57,8 +57,8 @@ jobs:
         run: |
 
           cat \
-            infra/oracle/dev/env/base.env.example \
-            infra/oracle/dev/env/web.env.example \
+            infra/oracle/dev/base.env.example \
+            infra/oracle/dev/web.env.example \
             > web.env
 
           sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" web.env
