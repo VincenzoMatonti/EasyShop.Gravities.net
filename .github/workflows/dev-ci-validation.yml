@@ -129,16 +129,17 @@ jobs:
           }
           "
 
-      - name: Check Cloudflare R2
+      - name: Check Cloudflare R2 connection
         run: |
-          php artisan tinker --execute="
-          dump(config('filesystems.default'));
-          dump(config('filesystems.disks.r2'));
-          Storage::disk('r2')->put('ci/test.txt','test');
-          dump(Storage::disk('r2')->exists('ci/test.txt'));
-          dump(Storage::disk('r2')->get('ci/test.txt'));
-          Storage::disk('r2')->delete('ci/test.txt');
-          dump(Storage::disk('r2')->exists('ci/test.txt'));
+          php artisan tinker --execute='
+            dump(config("filesystems.default"));
+            dump(config("filesystems.disks.r2"));
+            Storage::disk("r2")->put("ci/test.txt", "test");
+            dump(Storage::disk("r2")->exists("ci/test.txt"));
+            dump(Storage::disk("r2")->get("ci/test.txt"));
+            Storage::disk("r2")->delete("ci/test.txt");
+            dump(Storage::disk("r2")->exists("ci/test.txt"));
+            '
 
       - name: Check Resend configuration
         run: |
