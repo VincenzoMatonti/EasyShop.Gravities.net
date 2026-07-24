@@ -40,6 +40,7 @@ docker run -d \
     -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     -e APP_ROLE=web \
     -p 80:80 \
+    -p 443:443 \
     $IMAGE
 
 echo "Cleaning old images..."
