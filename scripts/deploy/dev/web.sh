@@ -37,6 +37,7 @@ docker run -d \
     --env-file /var/www/easyshop-web/shared/env/.env \
     -v /var/www/easyshop-web/shared/storage:/var/www/html/storage \
     -v /var/www/easyshop-web/shared/certs:/etc/secrets \
+    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
     -e APP_ROLE=web \
     -p 80:80 \
     $IMAGE

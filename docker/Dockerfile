@@ -119,7 +119,7 @@ EXPOSE 80 443
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-COPY docker/nginx/ssl/ /etc/nginx/ssl/
+
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
