@@ -114,10 +114,12 @@ RUN mkdir -p /var/www/.config/psysh \
     && chown -R www-data:www-data /var/www/.config
 
 
-EXPOSE 80
+EXPOSE 80 443
 
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+COPY docker/nginx/ssl/ /etc/nginx/ssl/
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
