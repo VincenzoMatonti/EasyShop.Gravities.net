@@ -3,7 +3,7 @@ name: Deploy DEV Web
 on:
   workflow_run:
     workflows:
-      - CI DEV
+      - Build DEV Image
     types:
       - completed
 
@@ -25,7 +25,7 @@ jobs:
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Check runner
 
         run: |
@@ -41,25 +41,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build Web Image
-      - name: Build Web Image
+      # Verify Image exist
+      - name: Verify Image Exists
 
         run: |
 
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
-          docker build \
-            -f docker/Dockerfile \
-            -t ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }} .
-
-      # Push Web Image
-      - name: Push Web Image
-
-        run: |
-
-          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-
-          docker push \
+          docker manifest inspect \
             ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }}
 
       # Generate Web ENV
