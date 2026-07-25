@@ -18,7 +18,7 @@ jobs:
 
     permissions:
       contents: read
-      packages: write
+      packages: read
 
     steps:
       # Checkout
@@ -117,7 +117,7 @@ jobs:
           mkdir -p \
             /var/www/easyshop-worker/shared/env
 
-          mv worker.env \
+          cp worker.env \
             /var/www/easyshop-worker/shared/env/.env
 
       # Generate TiDB Certificate
@@ -152,3 +152,9 @@ jobs:
 
           scripts/deploy/dev/worker.sh \
             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
+
+      - name: Cleanup
+
+        run: |
+          rm -f worker.env
+          rm -f tidb-ca.pem      

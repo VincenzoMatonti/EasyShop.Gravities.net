@@ -19,7 +19,7 @@ jobs:
 
     permissions:
       contents: read
-      packages: write
+      packages: read
 
     steps:
       - name: Checkout repository
@@ -116,7 +116,7 @@ jobs:
           mkdir -p \
             /var/www/easyshop-web/shared/env
 
-          mv web.env \
+          cp web.env \
             /var/www/easyshop-web/shared/env/.env
 
       # Generate and install certificate TiDb
@@ -149,3 +149,9 @@ jobs:
 
           scripts/deploy/dev/web.sh \
             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
+
+      - name: Cleanup
+
+        run: |
+          rm -f web.env
+          rm -f tidb-ca.pem
