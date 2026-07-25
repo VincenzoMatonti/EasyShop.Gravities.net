@@ -5,6 +5,7 @@ on:
 
 jobs:
   down:
+    environment: dev
 
     runs-on: ubuntu-latest
 
