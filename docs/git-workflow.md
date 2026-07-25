@@ -122,29 +122,3 @@ Current releases represent major development milestones.
 
 ---
 
-# Release Process
-
-The release process:
-
-1. Complete development on feature branches
-2. Merge features into dev
-3. Promote changes to staging
-4. Validate the application
-5. Merge into main
-6. Create Git tag
-7. Publish GitHub Release
-8. Update CHANGELOG.md
-
----
-
-# Repository History
-
-Current released milestones:
-
-- v0.1.0 Foundation & Authentication
-- v0.2.0 Customer Domain Foundation
-- v0.3.0 Commerce Core
-- v0.4.0 Customer Experience
-- v0.5.0 Enterprise Architecture Refactor
-- v0.6.0 Async Infrastructure & Error Management
-- v0.7.0 Main Release Baseline

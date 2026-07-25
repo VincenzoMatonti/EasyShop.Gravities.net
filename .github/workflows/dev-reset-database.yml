@@ -5,6 +5,7 @@ on:
 
 jobs:
   reset:
+    environment: dev
 
     runs-on: ubuntu-latest
 

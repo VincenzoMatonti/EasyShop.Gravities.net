@@ -7,6 +7,7 @@ on:
 
 jobs:
   ci:
+    environment: dev
     name: DEV Code Validation
 
     runs-on: ubuntu-latest
@@ -44,6 +45,16 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       REDIS_SCHEME: tls
+
+      # Cloudflare R2
+      FILESYSTEM_DISK: r2
+
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      AWS_BUCKET: ${{ secrets.R2_BUCKET }}
+      AWS_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+      AWS_USE_PATH_STYLE_ENDPOINT: true
 
       # Resend
       MAIL_MAILER: resend
@@ -111,13 +122,24 @@ jobs:
         run: |
           php artisan tinker --execute="
           dump(config('database.redis.default'));
-
           if (config('database.redis.default.host')) {
               dump(app('redis')->ping());
           } else {
               dump('Redis skipped');
           }
           "
+
+      - name: Check Cloudflare R2 connection
+        run: |
+          php artisan tinker --execute='
+            dump(config("filesystems.default"));
+            dump(config("filesystems.disks.r2"));
+            Storage::disk("r2")->put("ci/test.txt", "test");
+            dump(Storage::disk("r2")->exists("ci/test.txt"));
+            dump(Storage::disk("r2")->get("ci/test.txt"));
+            Storage::disk("r2")->delete("ci/test.txt");
+            dump(Storage::disk("r2")->exists("ci/test.txt"));
+            '
 
       - name: Check Resend configuration
         run: |
