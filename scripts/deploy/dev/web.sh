@@ -1,60 +1,120 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
-IMAGE=$1
+#######################################
+# Configuration
+#######################################
+
+IMAGE="${1:-}"
 
 CONTAINER_NAME="easyshop-web"
 
 ENV_FILE="/var/www/easyshop-web/shared/env/.env"
 
+STORAGE_PATH="/var/www/easyshop-web/shared/storage"
+
+CERTS_PATH="/var/www/easyshop-web/shared/certs"
+
+NGINX_SSL_PATH="/etc/nginx/ssl"
+
+#######################################
+# Validation
+#######################################
+
 if [ -z "$IMAGE" ]; then
-    echo "Missing docker image"
+    echo "ERROR: Missing docker image"
     exit 1
 fi
 
 if [ ! -f "$ENV_FILE" ]; then
-    echo "Missing env file: $ENV_FILE"
+    echo "ERROR: Missing env file: $ENV_FILE"
     exit 1
 fi
 
-echo "Deploying web..."
+echo "================================"
+echo "Deploying Web"
+echo "================================"
 
-echo "Image: $IMAGE"
+echo "Image:"
+echo "$IMAGE"
 
+#######################################
+# Pull image
+#######################################
+
+echo ""
 echo "Pulling image..."
-docker pull $IMAGE
 
-echo "Stopping old container..."
-docker stop $CONTAINER_NAME || true
-docker rm $CONTAINER_NAME || true
+docker pull "$IMAGE"
 
-echo "Starting new web container..."
+#######################################
+# Stop old container
+#######################################
+
+echo ""
+echo "Removing old container..."
+
+docker stop "$CONTAINER_NAME" 2> /dev/null || true
+
+docker rm "$CONTAINER_NAME" 2> /dev/null || true
+
+#######################################
+# Start container
+#######################################
+
+echo ""
+echo "Starting new container..."
 
 docker run -d \
-    --name $CONTAINER_NAME \
+    --name "$CONTAINER_NAME" \
     --restart unless-stopped \
-    --env-file /var/www/easyshop-web/shared/env/.env \
-    -v /var/www/easyshop-web/shared/storage:/var/www/html/storage \
-    -v /var/www/easyshop-web/shared/certs:/etc/secrets \
-    -v /etc/nginx/ssl:/etc/nginx/ssl:ro \
+    --env-file "$ENV_FILE" \
+    -v "$STORAGE_PATH:/var/www/html/storage" \
+    -v "$CERTS_PATH:/etc/secrets" \
+    -v "$NGINX_SSL_PATH:/etc/nginx/ssl:ro" \
     -e APP_ROLE=web \
     -p 80:80 \
     -p 443:443 \
-    $IMAGE
+    "$IMAGE"
 
-echo "Cleaning old images..."
+#######################################
+# Health check
+#######################################
 
-docker image prune -f
-
-echo "Checking container..."
+echo ""
+echo "Checking container status..."
 
 sleep 5
 
-if ! docker ps | grep $CONTAINER_NAME; then
-    echo "Web container failed to start"
-    docker logs $CONTAINER_NAME
+STATUS=$(docker inspect \
+    -f '{{.State.Status}}' \
+    "$CONTAINER_NAME")
+
+if [ "$STATUS" != "running" ]; then
+
+    echo "ERROR: Web container failed"
+
+    echo ""
+    echo "Container logs:"
+
+    docker logs "$CONTAINER_NAME"
+
     exit 1
+
 fi
 
+#######################################
+# Cleanup
+#######################################
+
+echo ""
+echo "Cleaning unused images..."
+
+docker image prune -af \
+    --filter "until=168h"
+
+echo ""
+echo "================================"
 echo "Web deployment completed"
+echo "================================"

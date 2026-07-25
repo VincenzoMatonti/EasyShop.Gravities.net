@@ -3,7 +3,7 @@ name: Deploy DEV Worker
 on:
   workflow_run:
     workflows:
-      - CI DEV
+      - Build DEV Image
     types:
       - completed
 
@@ -24,13 +24,12 @@ jobs:
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
- 
+
       - name: Check runner
 
         run: |
           hostname
           docker ps
-
 
       # Login GHCR
       - name: Login to GitHub Container Registry
@@ -41,22 +40,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Worker Image
+      # Verify Image exist
+      - name: Verify Image Exists
+
         run: |
 
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
-          docker build \
-            -f docker/Dockerfile \
-            -t ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }} .
-
-      # Push Worker Image
-      - name: Push Worker Image
-        run: |
-
-          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-
-          docker push \
+          docker manifest inspect \
             ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }}
 
       # Generate Worker ENV
@@ -164,4 +155,4 @@ jobs:
 
         run: |
           rm -f worker.env
-          rm -f tidb-ca.pem      
+          rm -f tidb-ca.pem
