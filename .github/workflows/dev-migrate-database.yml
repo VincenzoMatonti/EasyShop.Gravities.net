@@ -5,6 +5,7 @@ on:
 
 jobs:
   migrate:
+    environment: dev
 
     runs-on: ubuntu-latest
 
