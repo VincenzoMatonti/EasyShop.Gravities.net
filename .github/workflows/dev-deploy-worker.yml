@@ -24,6 +24,13 @@ jobs:
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
+ 
+      - name: Check runner
+
+        run: |
+          hostname
+          docker ps
+
 
       # Login GHCR
       - name: Login to GitHub Container Registry
@@ -109,7 +116,7 @@ jobs:
           sed -i "s|^MAIL_BILLING_ADDRESS=.*|MAIL_BILLING_ADDRESS=${{ secrets.MAIL_BILLING_ADDRESS }}|" worker.env
           sed -i "s|^MAIL_BILLING_NAME=.*|MAIL_BILLING_NAME=${{ secrets.MAIL_BILLING_NAME }}|" worker.env
 
-      # Create env
+      # Install worker env
       - name: Install Worker ENV
 
         run: |
