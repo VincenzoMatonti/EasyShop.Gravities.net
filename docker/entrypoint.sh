@@ -19,17 +19,33 @@ mkdir -p \
 echo "Applying permissions..."
 
 chown -R www-data:www-data storage bootstrap/cache
+
 chmod -R 775 storage bootstrap/cache
 
 echo "Preparing TiDB certificate..."
 
 if [ -f /etc/secrets/tidb-ca.pem ]; then
+
+    echo "TiDB certificate found"
+
+    # Make sure mounted certificate is readable by PHP-FPM/www-data
+    chmod 644 /etc/secrets/tidb-ca.pem
+
+    # Copy certificate inside Laravel storage for persistence/debugging
     cp /etc/secrets/tidb-ca.pem storage/certs/tidb-ca.pem
+
     chown www-data:www-data storage/certs/tidb-ca.pem
-    chmod 640 storage/certs/tidb-ca.pem
+
+    chmod 644 storage/certs/tidb-ca.pem
+
     echo "TiDB certificate ready"
+
 else
-    echo "WARNING: TiDB certificate not found"
+
+    echo "ERROR: TiDB certificate not found"
+
+    exit 1
+
 fi
 
 echo "Building Laravel cache..."
@@ -37,9 +53,14 @@ echo "Building Laravel cache..."
 php artisan optimize:clear
 
 php artisan config:cache
+
 php artisan route:cache
+
 php artisan view:cache
+
 php artisan event:cache
+
+echo "Creating storage link..."
 
 php artisan storage:link || true
 
@@ -55,6 +76,7 @@ case "${APP_ROLE}" in
 
         exec /usr/bin/supervisord \
             -c /etc/supervisor/conf.d/supervisord.conf
+
         ;;
 
     worker)
@@ -68,12 +90,15 @@ case "${APP_ROLE}" in
             --tries=5 \
             --timeout=120 \
             --max-time=3600
+
         ;;
 
     *)
 
         echo "Unknown APP_ROLE: ${APP_ROLE}"
+
         exit 1
+
         ;;
 
 esac
