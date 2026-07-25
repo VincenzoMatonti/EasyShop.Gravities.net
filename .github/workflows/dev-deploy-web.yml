@@ -41,7 +41,7 @@ jobs:
 
           docker build \
             -f docker/Dockerfile \
-            -t ghcr.io/$IMAGE_NAME/easyshop-app:dev .
+            -t ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }} .
 
       - name: Push Web Image
 
@@ -50,7 +50,7 @@ jobs:
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
           docker push \
-            ghcr.io/$IMAGE_NAME/easyshop-app:dev
+            ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }}
 
       - name: Generate Web ENV
 
@@ -178,4 +178,4 @@ jobs:
             chmod +x /tmp/scripts/deploy/dev/web.sh
 
             /tmp/scripts/deploy/dev/web.sh \
-              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:dev
+              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
