@@ -14,7 +14,7 @@ jobs:
 
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, worker]
 
     permissions:
       contents: read
@@ -109,19 +109,16 @@ jobs:
           sed -i "s|^MAIL_BILLING_ADDRESS=.*|MAIL_BILLING_ADDRESS=${{ secrets.MAIL_BILLING_ADDRESS }}|" worker.env
           sed -i "s|^MAIL_BILLING_NAME=.*|MAIL_BILLING_NAME=${{ secrets.MAIL_BILLING_NAME }}|" worker.env
 
-      # Upload Worker ENV
-      - name: Upload Worker ENV
+      # Create env
+      - name: Install Worker ENV
 
-        uses: appleboy/scp-action@v0.1.7
+        run: |
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+          mkdir -p \
+            /var/www/easyshop-worker/shared/env
 
-          source: worker.env
-
-          target: /tmp
+          mv worker.env \
+            /var/www/easyshop-worker/shared/env/.env
 
       # Generate TiDB Certificate
       - name: Generate TiDB Certificate
@@ -132,65 +129,26 @@ jobs:
 
           chmod 644 tidb-ca.pem
 
-      # Upload TiDB Certificate
-      - name: Upload TiDB Certificate
+      # Install TiDB Certificate
+      - name: Install TiDB Certificate
 
-        uses: appleboy/scp-action@v0.1.7
+        run: |
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+          mkdir -p \
+            /var/www/easyshop-worker/shared/certs
 
-          source: tidb-ca.pem
+          mv tidb-ca.pem \
+            /var/www/easyshop-worker/shared/certs/tidb-ca.pem
 
-          target: /tmp
-
-      # Upload Deploy Script
-      - name: Upload Worker Deploy Script
-
-        uses: appleboy/scp-action@v0.1.7
-
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
-
-          source: scripts/deploy/dev/worker.sh
-
-          target: /tmp
+          chmod 640 \
+            /var/www/easyshop-worker/shared/certs/tidb-ca.pem
 
       # Deploy Worker
-      - name: Deploy Worker on Oracle VM
+      - name: Deploy Worker
 
-        uses: appleboy/ssh-action@v1.2.2
+        run: |
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+          chmod +x scripts/deploy/dev/worker.sh
 
-          script: |
-
-            mkdir -p \
-              /var/www/easyshop-worker/shared/env \
-              /var/www/easyshop-worker/shared/certs
-
-
-            mv /tmp/worker.env \
-              /var/www/easyshop-worker/shared/env/.env
-
-
-            mv /tmp/tidb-ca.pem \
-              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
-
-
-            chmod 640 \
-              /var/www/easyshop-worker/shared/certs/tidb-ca.pem
-
-
-            chmod +x /tmp/scripts/deploy/dev/worker.sh
-
-
-            /tmp/scripts/deploy/dev/worker.sh \
-              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
+          scripts/deploy/dev/worker.sh \
+            ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}

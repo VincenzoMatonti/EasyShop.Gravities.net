@@ -15,7 +15,7 @@ jobs:
 
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, web]
 
     permissions:
       contents: read
@@ -108,17 +108,18 @@ jobs:
           sed -i "s|^MAIL_BILLING_ADDRESS=.*|MAIL_BILLING_ADDRESS=${{ secrets.MAIL_BILLING_ADDRESS }}|" web.env
           sed -i "s|^MAIL_BILLING_NAME=.*|MAIL_BILLING_NAME=${{ secrets.MAIL_BILLING_NAME }}|" web.env
 
-      - name: Upload Web ENV
-        uses: appleboy/scp-action@v0.1.7
+      # Install Web Env
+      - name: Install Web ENV
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+        run: |
 
-          source: web.env
-          target: /tmp
+          mkdir -p \
+            /var/www/easyshop-web/shared/env
 
+          mv web.env \
+            /var/www/easyshop-web/shared/env/.env
+
+      # Generate and install certificate TiDb
       - name: Generate TiDB Certificate
 
         run: |
@@ -126,56 +127,25 @@ jobs:
           echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
           chmod 644 tidb-ca.pem
 
-      - name: Upload TiDB Certificate
+      - name: Install TiDB Certificate
 
-        uses: appleboy/scp-action@v0.1.7
+        run: |
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+          mkdir -p \
+            /var/www/easyshop-web/shared/certs
 
-          source: tidb-ca.pem
-          target: /tmp
+          mv tidb-ca.pem \
+            /var/www/easyshop-web/shared/certs/tidb-ca.pem
 
-      - name: Upload Web Deploy Script
+          chmod 640 \
+            /var/www/easyshop-web/shared/certs/tidb-ca.pem
 
-        uses: appleboy/scp-action@v0.1.7
+      # Deploy app web
+      - name: Deploy Web
 
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
+        run: |
 
-          source: scripts/deploy/dev/web.sh
-          target: /tmp
+          chmod +x scripts/deploy/dev/web.sh
 
-      - name: Deploy Web on Oracle VM
-
-        uses: appleboy/ssh-action@v1.2.2
-
-        with:
-          host: ${{ secrets.ORACLE_DEV_HOST }}
-          username: deploy
-          key: ${{ secrets.ORACLE_DEV_SSH_KEY }}
-
-          script: |
-
-            mkdir -p \
-              /var/www/easyshop-web/shared/env \
-              /var/www/easyshop-web/shared/storage \
-              /var/www/easyshop-web/shared/certs
-
-            mv /tmp/web.env \
-              /var/www/easyshop-web/shared/env/.env
-
-            mv /tmp/tidb-ca.pem \
-              /var/www/easyshop-web/shared/certs/tidb-ca.pem
-
-            chmod 640 \
-              /var/www/easyshop-web/shared/certs/tidb-ca.pem
-
-            chmod +x /tmp/scripts/deploy/dev/web.sh
-
-            /tmp/scripts/deploy/dev/web.sh \
-              ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
+          scripts/deploy/dev/web.sh \
+            ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
