@@ -113,11 +113,8 @@ jobs:
           sleep 5
 
           docker exec \
-
             -e REDIS_PASSWORD="${REDIS_PASSWORD}" \
-
             easyshop-redis \
-
             /opt/redis/healthcheck.sh
 
       # Show container status
