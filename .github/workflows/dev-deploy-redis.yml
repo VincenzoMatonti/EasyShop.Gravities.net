@@ -1,0 +1,152 @@
+name: Deploy DEV Redis
+
+on:
+  workflow_run:
+    workflows:
+      - CI DEV
+    types:
+      - completed
+
+jobs:
+  deploy-redis:
+    environment: redis.dev
+
+    name: Deploy DEV Redis
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: [self-hosted, private, background]
+
+    permissions:
+      contents: read
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+
+        uses: actions/checkout@v4
+
+      # Runner check
+      - name: Check runner
+
+        run: |
+
+          hostname
+
+          docker ps
+
+      # Prepare Redis directories
+      - name: Prepare Redis directories
+
+        run: |
+
+
+          sudo mkdir -p \
+            /var/www/easyshop-redis/shared/data
+
+
+          sudo mkdir -p \
+            /var/www/easyshop-redis/shared/config
+
+
+          sudo mkdir -p \
+            /var/www/easyshop-redis/shared/scripts
+
+      # Install Redis configuration
+      - name: Install Redis configuration
+
+        run: |
+
+
+          sudo cp \
+            infra/redis/dev/redis.conf \
+            /var/www/easyshop-redis/shared/config/redis.conf
+
+      # Install Redis healthcheck
+      - name: Install Redis healthcheck
+
+        run: |
+
+
+          sudo cp \
+            infra/script/redis/dev/healthcheck.sh \
+            /var/www/easyshop-redis/shared/scripts/healthcheck.sh
+
+
+          sudo chmod +x \
+            /var/www/easyshop-redis/shared/scripts/healthcheck.sh
+
+      # Deploy Redis container
+      - name: Deploy Redis
+
+        env:
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+
+        run: |
+          echo "Deploying Redis"
+
+          docker pull redis:8-alpine
+
+          docker stop easyshop-redis || true
+
+          docker rm easyshop-redis || true
+
+          docker run -d \
+
+            --name easyshop-redis \
+
+            --restart unless-stopped \
+
+            --health-cmd "/opt/redis/healthcheck.sh" \
+
+            --health-interval 30s \
+
+            --health-timeout 5s \
+
+            --health-retries 3 \
+
+            -v /var/www/easyshop-redis/shared/data:/data \
+
+            -v /var/www/easyshop-redis/shared/config/redis.conf:/usr/local/etc/redis/redis.conf:ro \
+
+            -v /var/www/easyshop-redis/shared/scripts:/opt/redis:ro \
+
+            -p 10.0.1.144:6379:6379 \
+
+            redis:8-alpine \
+
+            redis-server /usr/local/etc/redis/redis.conf \
+
+            --requirepass "${REDIS_PASSWORD}"
+
+      # Verify Redis
+      - name: Redis health check
+
+        env:
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+
+        run: |
+          sleep 5
+
+          docker exec \
+
+            -e REDIS_PASSWORD="${REDIS_PASSWORD}" \
+
+            easyshop-redis \
+
+            /opt/redis/healthcheck.sh
+
+      # Show container status
+      - name: Redis status
+
+        run: |
+
+          docker ps
+
+      # Cleanup
+      - name: Cleanup
+
+        run: |
+
+          docker image prune -af \
+            --filter "until=168h"
