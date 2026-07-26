@@ -38,7 +38,7 @@ jobs:
           IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
           docker build \
-            -f docker/Dockerfile \
+            -f infra/docker/dev/Dockerfile \
             -t ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }} .
 
       - name: Push Image

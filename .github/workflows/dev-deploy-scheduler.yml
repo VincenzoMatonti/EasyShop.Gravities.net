@@ -66,8 +66,8 @@ jobs:
 
 
           cat \
-            infra/oracle/dev/base.env.example \
-            infra/oracle/dev/scheduler.env.example \
+            infra/env/dev/base.env.example \
+            infra/env/dev/scheduler.env.example \
             > scheduler.env
 
 
@@ -175,10 +175,10 @@ jobs:
         run: |
 
 
-          chmod +x scripts/deploy/dev/scheduler.sh
+          chmod +x infra/scripts/deploy/dev/scheduler.sh
 
 
-          scripts/deploy/dev/scheduler.sh \
+          infra/scripts/deploy/dev/scheduler.sh \
             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
 
       # Cleanup
