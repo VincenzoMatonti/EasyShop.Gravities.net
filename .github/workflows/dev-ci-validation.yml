@@ -51,7 +51,7 @@ jobs:
       DB_USERNAME: sail
       DB_PASSWORD: password
 
-      # CI Redis
+      # CI Redis Service
       REDIS_CLIENT: phpredis
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: 6379
@@ -135,12 +135,13 @@ jobs:
         run: |
           php artisan tinker --execute="
           dump(config('database.redis.default'));
-          if (config('database.redis.default.host')) {
-              dump(app('redis')->ping());
-          } else {
-              dump('Redis skipped');
-          }
-          "
+           try {
+               dump(app('redis')->ping());
+           } catch (\Exception \$e) {
+               dump(\$e->getMessage());
+               exit(1);
+           }
+           "
 
       - name: Check Cloudflare R2 connection
         run: |
