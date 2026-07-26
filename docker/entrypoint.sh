@@ -68,6 +68,8 @@ APP_ROLE="${APP_ROLE:-web}"
 
 echo "Application role: ${APP_ROLE}"
 
+echo "Container started with role ${APP_ROLE}"
+
 case "${APP_ROLE}" in
 
     web)
@@ -89,7 +91,16 @@ case "${APP_ROLE}" in
             --sleep=3 \
             --tries=5 \
             --timeout=120 \
+            --memory=256 \
             --max-time=3600
+
+        ;;
+
+    scheduler)
+
+        echo "Starting Scheduler..."
+
+        exec php artisan schedule:work --verbose
 
         ;;
 

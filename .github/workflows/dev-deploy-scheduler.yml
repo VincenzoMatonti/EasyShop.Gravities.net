@@ -1,0 +1,191 @@
+name: Deploy DEV Scheduler
+
+on:
+  workflow_run:
+    workflows:
+      - Build DEV Image
+    types:
+      - completed
+
+jobs:
+  deploy-scheduler:
+    environment: scheduler.dev
+
+    name: Deploy DEV Scheduler
+
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: [self-hosted, scheduler]
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # Checkout
+      - name: Checkout repository
+
+        uses: actions/checkout@v4
+
+      # Runner check
+      - name: Check runner
+
+        run: |
+
+          hostname
+          docker ps
+
+      # Login GHCR
+      - name: Login to GitHub Container Registry
+
+        uses: docker/login-action@v3
+
+        with:
+          registry: ghcr.io
+
+          username: ${{ github.actor }}
+
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Verify image
+      - name: Verify Image Exists
+
+        run: |
+
+
+          IMAGE_NAME=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+
+
+          docker manifest inspect \
+            ghcr.io/$IMAGE_NAME/easyshop-app:${{ github.sha }}
+
+      # Generate Scheduler ENV
+      - name: Generate Scheduler ENV
+
+        run: |
+
+
+          cat \
+            infra/oracle/dev/base.env.example \
+            infra/oracle/dev/scheduler.env.example \
+            > scheduler.env
+
+
+
+          sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" scheduler.env
+
+          sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" scheduler.env
+
+
+
+          sed -i "s|^DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" scheduler.env
+
+          sed -i "s|^DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" scheduler.env
+
+          sed -i "s|^DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" scheduler.env
+
+          sed -i "s|^DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" scheduler.env
+
+          sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" scheduler.env
+
+
+
+          sed -i "s|^REDIS_HOST=.*|REDIS_HOST=${{ secrets.REDIS_HOST }}|" scheduler.env
+
+          sed -i "s|^REDIS_PASSWORD=.*|REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}|" scheduler.env
+
+          sed -i "s|^REDIS_PORT=.*|REDIS_PORT=${{ secrets.REDIS_PORT }}|" scheduler.env
+
+          sed -i "s|^REDIS_USERNAME=.*|REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}|" scheduler.env
+
+          sed -i "s|^REDIS_SCHEME=.*|REDIS_SCHEME=${{ secrets.REDIS_SCHEME }}|" scheduler.env
+
+
+
+          sed -i "s|^FILESYSTEM_DISK=.*|FILESYSTEM_DISK=s3|" scheduler.env
+
+
+
+          sed -i "s|^AWS_ACCESS_KEY_ID=.*|AWS_ACCESS_KEY_ID=${{ secrets.R2_ACCESS_KEY_ID }}|" scheduler.env
+
+          sed -i "s|^AWS_SECRET_ACCESS_KEY=.*|AWS_SECRET_ACCESS_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}|" scheduler.env
+
+          sed -i "s|^AWS_DEFAULT_REGION=.*|AWS_DEFAULT_REGION=auto|" scheduler.env
+
+          sed -i "s|^AWS_BUCKET=.*|AWS_BUCKET=${{ secrets.R2_BUCKET }}|" scheduler.env
+
+          sed -i "s|^AWS_ENDPOINT=.*|AWS_ENDPOINT=${{ secrets.R2_ENDPOINT }}|" scheduler.env
+
+          sed -i "s|^AWS_URL=.*|AWS_URL=${{ secrets.R2_ENDPOINT }}/${{ secrets.R2_BUCKET }}|" scheduler.env
+
+          sed -i "s|^AWS_USE_PATH_STYLE_ENDPOINT=.*|AWS_USE_PATH_STYLE_ENDPOINT=true|" scheduler.env
+
+
+
+          sed -i "s|^RESEND_API_KEY=.*|RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}|" scheduler.env
+
+
+
+          sed -i "s|^MAIL_FROM_ADDRESS=.*|MAIL_FROM_ADDRESS=${{ secrets.MAIL_FROM_ADDRESS }}|" scheduler.env
+
+          sed -i "s|^MAIL_FROM_NAME=.*|MAIL_FROM_NAME=${{ secrets.MAIL_FROM_NAME }}|" scheduler.env
+
+      # Install Scheduler ENV
+      - name: Install Scheduler ENV
+
+        run: |
+
+
+          mkdir -p \
+            /var/www/easyshop-scheduler/shared/env
+
+
+          cp scheduler.env \
+            /var/www/easyshop-scheduler/shared/env/.env
+
+      # TiDB Certificate
+      - name: Generate TiDB Certificate
+
+        run: |
+
+
+          echo "${{ secrets.TIDB_CA_CERT }}" > tidb-ca.pem
+
+          chmod 644 tidb-ca.pem
+
+      - name: Install TiDB Certificate
+
+        run: |
+
+
+          mkdir -p \
+            /var/www/easyshop-scheduler/shared/certs
+
+
+          mv tidb-ca.pem \
+            /var/www/easyshop-scheduler/shared/certs/tidb-ca.pem
+
+
+          chmod 640 \
+            /var/www/easyshop-scheduler/shared/certs/tidb-ca.pem
+
+      # Deploy Scheduler
+      - name: Deploy Scheduler
+
+        run: |
+
+
+          chmod +x scripts/deploy/dev/scheduler.sh
+
+
+          scripts/deploy/dev/scheduler.sh \
+            ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
+
+      # Cleanup
+      - name: Cleanup
+
+        run: |
+
+          rm -f scheduler.env
+
+          rm -f tidb-ca.pem

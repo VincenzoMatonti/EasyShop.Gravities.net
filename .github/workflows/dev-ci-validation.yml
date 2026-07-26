@@ -43,6 +43,7 @@ jobs:
       REDIS_CLIENT: phpredis
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       REDIS_SCHEME: tls
 
