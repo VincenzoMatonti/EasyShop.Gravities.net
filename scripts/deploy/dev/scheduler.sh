@@ -8,15 +8,13 @@ set -euo pipefail
 
 IMAGE="${1:-}"
 
-CONTAINER_NAME="easyshop-web"
+CONTAINER_NAME="easyshop-scheduler"
 
-ENV_FILE="/var/www/easyshop-web/shared/env/.env"
+ENV_FILE="/var/www/easyshop-scheduler/shared/env/.env"
 
-STORAGE_PATH="/var/www/easyshop-web/shared/storage"
+STORAGE_PATH="/var/www/easyshop-scheduler/shared/storage"
 
-CERTS_PATH="/var/www/easyshop-web/shared/certs"
-
-NGINX_SSL_PATH="/etc/nginx/ssl"
+CERTS_PATH="/var/www/easyshop-scheduler/shared/certs"
 
 #######################################
 # Validation
@@ -33,7 +31,7 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 echo "================================"
-echo "Deploying Web"
+echo "Deploying Scheduler"
 echo "================================"
 
 echo "Image:"
@@ -60,11 +58,11 @@ docker stop "$CONTAINER_NAME" 2> /dev/null || true
 docker rm "$CONTAINER_NAME" 2> /dev/null || true
 
 #######################################
-# Start container
+# Start Scheduler
 #######################################
 
 echo ""
-echo "Starting new container..."
+echo "Starting scheduler container..."
 
 docker run -d \
     --name "$CONTAINER_NAME" \
@@ -72,10 +70,7 @@ docker run -d \
     --env-file "$ENV_FILE" \
     -v "$STORAGE_PATH:/var/www/html/storage" \
     -v "$CERTS_PATH:/etc/secrets" \
-    -v "$NGINX_SSL_PATH:/etc/nginx/ssl:ro" \
-    -e APP_ROLE=web \
-    -p 80:80 \
-    -p 443:443 \
+    -e APP_ROLE=scheduler \
     "$IMAGE"
 
 #######################################
@@ -93,7 +88,7 @@ STATUS=$(docker inspect \
 
 if [ "$STATUS" != "running" ]; then
 
-    echo "ERROR: Web container failed"
+    echo "ERROR: Scheduler container failed"
 
     echo ""
     echo "Container logs:"
@@ -116,5 +111,5 @@ docker image prune -af \
 
 echo ""
 echo "================================"
-echo "Web deployment completed"
+echo "Scheduler deployment completed"
 echo "================================"

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-EasyShop is built using a **Technical Layered Architecture** combined with a **Domain-Oriented Organization approach**.
+EasyShop is built using a **Application Architecture** combined with a **Domain-Oriented Organization approach and Technical Layer Separation**.
 
 The main goal of this architecture is to maintain a clear separation of technical responsibilities while keeping business domains and subdomains organized, scalable, and easy to maintain.
 

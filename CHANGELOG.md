@@ -6,6 +6,74 @@ The project follows Semantic Versioning and each milestone is published through 
 
 ---
 
+# v0.9.0 - Immutable Docker Deployments & CI/CD Stabilization
+
+## Added
+
+- Immutable Docker image deployment strategy
+- Docker images versioned using Git commit SHA
+- Separate Web and Worker deployment pipelines
+- GHCR image versioning workflow
+- Automated deployment from GitHub Container Registry
+- Environment-based deployment configuration
+- TiDB SSL certificate deployment flow
+
+## Changed
+
+- Removed mutable Docker image tags
+- Deployments now use immutable image references
+- Improved rollback capability through commit-based images
+- Deployment responsibilities separated between build and runtime environments
+
+## Infrastructure
+
+- Stabilized Oracle VM deployments
+- Improved Web container deployment
+- Improved Worker container deployment
+- Validated secure environment generation
+- Validated shared storage and certificate management
+
+## Milestone
+
+The project now uses a production-oriented immutable deployment workflow where Docker images are built once, stored in GHCR, and deployed consistently across environments.
+
+---
+
+# v0.8.0 - Containerized Deployment & DevOps Infrastructure
+
+## Added
+
+- Docker containerization
+- GitHub Actions CI/CD pipelines
+- GitHub Container Registry integration
+- Oracle Cloud VM deployment
+- Self-hosted deployment runners
+- Worker container runtime
+- Redis queue worker deployment
+- TiDB TLS certificate management
+- Environment-based deployment configuration
+
+## Infrastructure
+
+- Automated Docker image build workflow
+- Automated image publishing workflow
+- Web deployment automation
+- Worker deployment automation
+- Shared runtime storage management
+- Secret-based environment generation
+
+## Architecture
+
+Infrastructure components were integrated while maintaining the existing Technical Layered Architecture and Domain-Oriented Organization.
+
+Deployment and infrastructure concerns remain separated from business logic.
+
+## Milestone
+
+The project introduced the first complete DevOps foundation, enabling automated delivery workflows and production-oriented infrastructure evolution.
+
+---
+
 # v0.7.0 - Main Release Baseline
 
 ## Added
