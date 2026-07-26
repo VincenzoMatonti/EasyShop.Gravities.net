@@ -74,9 +74,9 @@ jobs:
 
       - name: Validate Docker entrypoint
         run: |
-          test -f docker/entrypoint.sh
-          test -x docker/entrypoint.sh
-          bash -n docker/entrypoint.sh
+          test -f infra/docker/dev/entrypoint.sh
+          test -x infra/docker/dev/entrypoint.sh
+          bash -n infra/docker/dev/entrypoint.sh
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
