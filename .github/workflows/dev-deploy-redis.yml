@@ -61,18 +61,6 @@ jobs:
             infra/redis/dev/redis.conf \
             /var/www/easyshop-redis/shared/config/redis.conf
 
-      # Install Redis healthcheck
-      - name: Install Redis healthcheck
-
-        run: |
-
-          cp \
-            infra/scripts/redis/dev/healthcheck.sh \
-            /var/www/easyshop-redis/shared/scripts/healthcheck.sh
-
-          chmod +x \
-            /var/www/easyshop-redis/shared/scripts/healthcheck.sh
-
       # Deploy Redis container
       - name: Deploy Redis
 
@@ -91,13 +79,12 @@ jobs:
           docker run -d \
           --name easyshop-redis \
           --restart unless-stopped \
-          --health-cmd "/opt/redis/healthcheck.sh" \
+          --health-cmd "redis-cli -a ${REDIS_PASSWORD} ping | grep PONG" \
           --health-interval 30s \
           --health-timeout 5s \
           --health-retries 3 \
           -v /var/www/easyshop-redis/shared/data:/data \
           -v /var/www/easyshop-redis/shared/config/redis.conf:/usr/local/etc/redis/redis.conf:ro \
-          -v /var/www/easyshop-redis/shared/scripts:/opt/redis:ro \
           -p 10.0.1.144:6379:6379 \
           redis:8-alpine \
           redis-server /usr/local/etc/redis/redis.conf \
@@ -110,12 +97,14 @@ jobs:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
 
         run: |
+
           sleep 5
 
           docker exec \
-            -e REDIS_PASSWORD="${REDIS_PASSWORD}" \
             easyshop-redis \
-            /opt/redis/healthcheck.sh
+            redis-cli \
+            -a "${REDIS_PASSWORD}" \
+            ping
 
       # Show container status
       - name: Redis status
