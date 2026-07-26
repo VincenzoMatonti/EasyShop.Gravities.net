@@ -58,6 +58,9 @@ jobs:
       REDIS_USERNAME: ""
       REDIS_PASSWORD: ""
       REDIS_SCHEME: ""
+      REDIS_DB: 0
+      REDIS_CACHE_DB: 1
+      REDIS_CACHE_CONNECTION: cache
 
       # Cloudflare R2
       FILESYSTEM_DISK: r2
@@ -133,15 +136,31 @@ jobs:
 
       - name: Check Redis connection
         run: |
+          php artisan config:clear
+
           php artisan tinker --execute="
           dump(config('database.redis.default'));
-           try {
-               dump(app('redis')->ping());
-           } catch (\Exception \$e) {
-               dump(\$e->getMessage());
-               exit(1);
-           }
-           "
+
+          try {
+              dump(app('redis')->ping());
+          } catch (\Exception \$e) {
+              dump(\$e->getMessage());
+              exit(1);
+          }
+          "
+
+      - name: Check Redis cache
+        run: |
+          php artisan tinker --execute="
+          Cache::put('ci-test','ok',60);
+          dump(Cache::get('ci-test'));
+          "
+
+      - name: Check Redis queue
+        run: |
+          php artisan tinker --execute="
+          dump(config('queue.default'));
+          "
 
       - name: Check Cloudflare R2 connection
         run: |
