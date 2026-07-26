@@ -41,15 +41,15 @@ jobs:
         run: |
 
 
-          sudo mkdir -p \
+          mkdir -p \
             /var/www/easyshop-redis/shared/data
 
 
-          sudo mkdir -p \
+          mkdir -p \
             /var/www/easyshop-redis/shared/config
 
 
-          sudo mkdir -p \
+          mkdir -p \
             /var/www/easyshop-redis/shared/scripts
 
       # Install Redis configuration
@@ -57,8 +57,7 @@ jobs:
 
         run: |
 
-
-          sudo cp \
+          cp \
             infra/redis/dev/redis.conf \
             /var/www/easyshop-redis/shared/config/redis.conf
 
@@ -67,13 +66,11 @@ jobs:
 
         run: |
 
-
-          sudo cp \
-            infra/script/redis/dev/healthcheck.sh \
+          cp \
+            infra/scripts/redis/dev/healthcheck.sh \
             /var/www/easyshop-redis/shared/scripts/healthcheck.sh
 
-
-          sudo chmod +x \
+          chmod +x \
             /var/www/easyshop-redis/shared/scripts/healthcheck.sh
 
       # Deploy Redis container
@@ -92,32 +89,19 @@ jobs:
           docker rm easyshop-redis || true
 
           docker run -d \
-
-            --name easyshop-redis \
-
-            --restart unless-stopped \
-
-            --health-cmd "/opt/redis/healthcheck.sh" \
-
-            --health-interval 30s \
-
-            --health-timeout 5s \
-
-            --health-retries 3 \
-
-            -v /var/www/easyshop-redis/shared/data:/data \
-
-            -v /var/www/easyshop-redis/shared/config/redis.conf:/usr/local/etc/redis/redis.conf:ro \
-
-            -v /var/www/easyshop-redis/shared/scripts:/opt/redis:ro \
-
-            -p 10.0.1.144:6379:6379 \
-
-            redis:8-alpine \
-
-            redis-server /usr/local/etc/redis/redis.conf \
-
-            --requirepass "${REDIS_PASSWORD}"
+          --name easyshop-redis \
+          --restart unless-stopped \
+          --health-cmd "/opt/redis/healthcheck.sh" \
+          --health-interval 30s \
+          --health-timeout 5s \
+          --health-retries 3 \
+          -v /var/www/easyshop-redis/shared/data:/data \
+          -v /var/www/easyshop-redis/shared/config/redis.conf:/usr/local/etc/redis/redis.conf:ro \
+          -v /var/www/easyshop-redis/shared/scripts:/opt/redis:ro \
+          -p 10.0.1.144:6379:6379 \
+          redis:8-alpine \
+          redis-server /usr/local/etc/redis/redis.conf \
+          --requirepass "${REDIS_PASSWORD}"
 
       # Verify Redis
       - name: Redis health check
@@ -144,9 +128,9 @@ jobs:
           docker ps
 
       # Cleanup
-      - name: Cleanup
+      - name: Cleanup Docker images
 
         run: |
 
-          docker image prune -af \
+          docker image prune -f \
             --filter "until=168h"
