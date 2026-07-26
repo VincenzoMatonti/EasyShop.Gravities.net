@@ -62,7 +62,7 @@ jobs:
 
           sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" worker.env
           sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" worker.env
-          sed -i "s|^APP_DEBUG=.*|APP_DEBUG=${{ secrets.APP_DEBUG }}|" scheduler.env
+          sed -i "s|^APP_DEBUG=.*|APP_DEBUG=${{ secrets.APP_DEBUG }}|" worker.env
 
           sed -i "s|^DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" worker.env
           sed -i "s|^DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" worker.env
