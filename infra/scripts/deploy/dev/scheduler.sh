@@ -66,6 +66,7 @@ echo "Starting scheduler container..."
 
 docker run -d \
     --name "$CONTAINER_NAME" \
+    --network easyshop-network \
     --restart unless-stopped \
     --env-file "$ENV_FILE" \
     -v "$STORAGE_PATH:/var/www/html/storage" \
