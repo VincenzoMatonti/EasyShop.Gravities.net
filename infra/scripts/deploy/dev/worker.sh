@@ -67,6 +67,7 @@ echo "Starting new worker container..."
 docker run -d \
     --name "$CONTAINER_NAME" \
     --restart unless-stopped \
+    --network easyshop-network \
     --env-file "$ENV_FILE" \
     -v "$STORAGE_PATH:/var/www/html/storage" \
     -v "$CERTS_PATH:/etc/secrets" \

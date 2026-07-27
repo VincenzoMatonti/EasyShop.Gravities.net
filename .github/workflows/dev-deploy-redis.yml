@@ -78,6 +78,7 @@ jobs:
 
           docker run -d \
           --name easyshop-redis \
+          --network easyshop-network \
           --restart unless-stopped \
           --health-cmd "redis-cli -a ${REDIS_PASSWORD} ping | grep PONG" \
           --health-interval 30s \
