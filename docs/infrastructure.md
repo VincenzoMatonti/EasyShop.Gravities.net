@@ -551,12 +551,21 @@ Cloudflare R2
 
 Public application traffic is managed through Cloudflare.
 
-Implemented services:
+Cloudflare Edge Security Layer
+
+Implemented:
 
 - DNS management
-- CDN
-- Edge caching
+- CDN and edge caching
+- HTTPS enforcement
+- HSTS protection
 - Web Application Firewall
+- Managed security rules
+- Custom security rules
+- Authentication rate limiting
+- Bot protection
+- Security headers
+- Compression optimization
 - Traffic filtering
 
 
