@@ -31,6 +31,18 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+      redis:
+        image: redis:8-alpine
+
+        ports:
+          - 6379:6379
+
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     env:
       DB_CONNECTION: mysql
       DB_HOST: 127.0.0.1
@@ -39,13 +51,17 @@ jobs:
       DB_USERNAME: sail
       DB_PASSWORD: password
 
-      # Upstash Redis
+      # CI Redis Service
+      REDIS_URL: ""
       REDIS_CLIENT: phpredis
-      REDIS_HOST: ${{ secrets.REDIS_HOST }}
-      REDIS_PORT: ${{ secrets.REDIS_PORT }}
-      REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
-      REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-      REDIS_SCHEME: tls
+      REDIS_HOST: 127.0.0.1
+      REDIS_PORT: 6379
+      REDIS_USERNAME: ""
+      REDIS_PASSWORD: ""
+      REDIS_SCHEME: tcp
+      REDIS_DB: 0
+      REDIS_CACHE_DB: 1
+      REDIS_CACHE_CONNECTION: cache
 
       # Cloudflare R2
       FILESYSTEM_DISK: r2
@@ -74,9 +90,9 @@ jobs:
 
       - name: Validate Docker entrypoint
         run: |
-          test -f docker/entrypoint.sh
-          test -x docker/entrypoint.sh
-          bash -n docker/entrypoint.sh
+          test -f infra/docker/dev/entrypoint.sh
+          test -x infra/docker/dev/entrypoint.sh
+          bash -n infra/docker/dev/entrypoint.sh
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -121,13 +137,30 @@ jobs:
 
       - name: Check Redis connection
         run: |
+          php artisan config:clear
+
           php artisan tinker --execute="
-          dump(config('database.redis.default'));
-          if (config('database.redis.default.host')) {
-              dump(app('redis')->ping());
-          } else {
-              dump('Redis skipped');
+          dump(config('database.redis'));
+
+          try {
+              dump(app('redis')->connection('default')->ping());
+          } catch (\Exception \$e) {
+              dump(\$e->getMessage());
+              exit(1);
           }
+          "
+
+      - name: Check Redis cache
+        run: |
+          php artisan tinker --execute="
+          Cache::put('ci-test','ok',60);
+          dump(Cache::get('ci-test'));
+          "
+
+      - name: Check Redis queue
+        run: |
+          php artisan tinker --execute="
+          dump(config('queue.default'));
           "
 
       - name: Check Cloudflare R2 connection

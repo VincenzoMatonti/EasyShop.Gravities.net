@@ -57,12 +57,13 @@ jobs:
         run: |
 
           cat \
-            infra/oracle/dev/base.env.example \
-            infra/oracle/dev/web.env.example \
+            infra/env/dev/base.env.example \
+            infra/env/dev/web.env.example \
             > web.env
 
           sed -i "s|^APP_KEY=.*|APP_KEY=${{ secrets.APP_KEY }}|" web.env
           sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" web.env
+          sed -i "s|^APP_DEBUG=.*|APP_DEBUG=${{ secrets.APP_DEBUG }}|" web.env
 
           sed -i "s|^DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" web.env
           sed -i "s|^DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" web.env
@@ -145,9 +146,9 @@ jobs:
 
         run: |
 
-          chmod +x scripts/deploy/dev/web.sh
+          chmod +x infra/scripts/deploy/dev/web.sh
 
-          scripts/deploy/dev/web.sh \
+          infra/scripts/deploy/dev/web.sh \
             ghcr.io/$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')/easyshop-app:${{ github.sha }}
 
       - name: Cleanup

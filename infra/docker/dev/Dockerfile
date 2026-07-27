@@ -98,11 +98,11 @@ COPY --from=frontend \
 RUN rm -f public/hot
 
 
-COPY docker/nginx/default.conf \
+COPY infra/docker/dev/nginx/default.conf \
     /etc/nginx/sites-available/default
 
 
-COPY docker/supervisor/supervisord.conf \
+COPY infra/docker/dev/supervisor/supervisord.conf \
     /etc/supervisor/conf.d/supervisord.conf
 
 
@@ -118,7 +118,7 @@ RUN mkdir -p /var/www/.config/psysh \
 EXPOSE 80 443
 
 
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY infra/docker/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
 
 
 

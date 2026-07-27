@@ -8,13 +8,13 @@ set -euo pipefail
 
 IMAGE="${1:-}"
 
-CONTAINER_NAME="easyshop-scheduler"
+CONTAINER_NAME="easyshop-worker"
 
-ENV_FILE="/var/www/easyshop-scheduler/shared/env/.env"
+ENV_FILE="/var/www/easyshop-worker/shared/env/.env"
 
-STORAGE_PATH="/var/www/easyshop-scheduler/shared/storage"
+STORAGE_PATH="/var/www/easyshop-worker/shared/storage"
 
-CERTS_PATH="/var/www/easyshop-scheduler/shared/certs"
+CERTS_PATH="/var/www/easyshop-worker/shared/certs"
 
 #######################################
 # Validation
@@ -31,7 +31,7 @@ if [ ! -f "$ENV_FILE" ]; then
 fi
 
 echo "================================"
-echo "Deploying Scheduler"
+echo "Deploying Worker"
 echo "================================"
 
 echo "Image:"
@@ -58,23 +58,24 @@ docker stop "$CONTAINER_NAME" 2> /dev/null || true
 docker rm "$CONTAINER_NAME" 2> /dev/null || true
 
 #######################################
-# Start Scheduler
+# Start worker
 #######################################
 
 echo ""
-echo "Starting scheduler container..."
+echo "Starting new worker container..."
 
 docker run -d \
     --name "$CONTAINER_NAME" \
     --restart unless-stopped \
+    --network easyshop-network \
     --env-file "$ENV_FILE" \
     -v "$STORAGE_PATH:/var/www/html/storage" \
     -v "$CERTS_PATH:/etc/secrets" \
-    -e APP_ROLE=scheduler \
+    -e APP_ROLE=worker \
     "$IMAGE"
 
 #######################################
-# Health check
+# Check container
 #######################################
 
 echo ""
@@ -88,7 +89,7 @@ STATUS=$(docker inspect \
 
 if [ "$STATUS" != "running" ]; then
 
-    echo "ERROR: Scheduler container failed"
+    echo "ERROR: Worker container failed"
 
     echo ""
     echo "Container logs:"
@@ -111,5 +112,5 @@ docker image prune -af \
 
 echo ""
 echo "================================"
-echo "Scheduler deployment completed"
+echo "Worker deployment completed"
 echo "================================"
