@@ -6,6 +6,178 @@ The project follows Semantic Versioning and each milestone is published through 
 
 ---
 
+# v1.0.0 - Production Infrastructure & Cloud Architecture
+
+## Overview
+
+This release represents the first production-ready version of EasyShop.
+
+The platform now includes a complete cloud infrastructure, private service architecture, automated deployment workflow and validated production integrations.
+
+---
+
+## Added
+
+### Infrastructure
+
+- Oracle Cloud production infrastructure
+- Separated Web VM and Private Background VM
+- Private network architecture for internal services
+- Dedicated containers for:
+  - Laravel Web
+  - Queue Worker
+  - Scheduler
+  - Redis
+
+### Docker & Networking
+
+- Internal Docker network for background services
+- Container service discovery
+- Private Redis communication
+- Isolated background processing environment
+
+### Cloud & Security
+
+- Cloudflare DNS integration
+- CDN and edge caching
+- Web Application Firewall (WAF)
+- Protected public application entry point
+- Restricted network access rules
+
+### CI/CD
+
+- Automated Docker image delivery through GHCR
+- Immutable deployment workflow
+- Self-hosted deployment runners
+- Environment-based configuration management
+
+---
+
+## Verified Services
+
+Production connectivity validated:
+
+- Laravel Web Application
+- Laravel Queue Worker
+- Laravel Scheduler
+- Redis Cache & Queue System
+- TiDB Cloud Database
+- Cloudflare R2 Storage
+- Mail Services
+- External service communication
+
+---
+
+## Deployment Validation
+
+Validated communication between:
+
+- Web Application → Redis
+- Worker → Redis
+- Scheduler → Redis
+- Application → Database
+- Application → Object Storage
+- Application → External Services
+
+---
+
+## Milestone
+
+EasyShop v1.0.0 establishes the first production-ready foundation with:
+
+- Scalable application architecture
+- Automated deployments
+- Secure cloud infrastructure
+- Private backend services
+- Production-oriented networking
+
+# v0.10.0 - Scheduler Deployment and Background Infrastructure
+
+## Overview
+
+This release introduces the separation of background processing responsibilities by introducing a dedicated Laravel Scheduler runtime.
+
+The application now supports independent execution and deployment of:
+
+- Web service
+- Queue Worker service
+- Scheduler service
+
+---
+
+## Added
+
+### Scheduler Infrastructure
+
+- Dedicated Laravel Scheduler container
+- Scheduler deployment workflow
+- Scheduler self-hosted runner support
+- Scheduler environment configuration
+- Scheduler shared storage management
+- Scheduler certificate management
+
+### Background Services
+
+- Independent Worker and Scheduler runtime services
+- Dedicated deployment scripts for background workloads
+- Separate application roles using container runtime configuration
+
+---
+
+## Changed
+
+- Improved background processing architecture
+- Separated queue execution from scheduled task execution
+- Improved deployment isolation between asynchronous services
+- Reduced coupling between application runtime responsibilities
+
+---
+
+## CI/CD
+
+- Added automated scheduler deployment flow
+- Updated self-hosted runner configuration
+- Extended deployment automation for background services
+- Improved environment-specific deployment handling
+
+---
+
+## Deployment Architecture
+
+The development infrastructure now runs:
+
+- Web service
+- Queue Worker service
+- Laravel Scheduler service
+
+
+Each service has:
+
+- Dedicated runtime role
+- Dedicated deployment lifecycle
+- Dedicated environment configuration
+
+---
+
+## Validation
+
+Verified:
+
+- Self-hosted runner execution
+- Web deployment
+- Worker deployment
+- Scheduler deployment
+- Container startup lifecycle
+- Runtime separation between background services
+
+---
+
+## Milestone
+
+This release completes the separation of application runtime responsibilities and establishes the foundation for scalable background processing infrastructure.
+
+---
+
 # v0.9.0 - Immutable Docker Deployments & CI/CD Stabilization
 
 ## Added

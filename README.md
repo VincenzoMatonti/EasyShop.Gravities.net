@@ -2,23 +2,27 @@
 
 > Enterprise Ecommerce Platform built with Laravel
 
-EasyShop is a portfolio ecommerce platform designed to simulate the architecture, development workflow, and infrastructure of a real-world enterprise application.
+EasyShop is an enterprise-oriented ecommerce platform designed to simulate the architecture, development workflow, and infrastructure of a real-world production application.
 
 The project focuses on:
 
 - Scalability
 - Maintainability
 - Clean architecture principles
+- Domain-oriented organization
 - Automated development workflows
-- Production-oriented infrastructure
+- Containerized infrastructure
+- Production-ready deployment practices
 
 ---
 
 # Overview
 
-EasyShop is an ecommerce platform currently under active development.
+EasyShop is a complete ecommerce platform built with Laravel.
 
-The goal is to build a complete enterprise-style system including:
+The project includes application services, background processing, infrastructure automation, and cloud deployment workflows.
+
+The system includes:
 
 - Authentication and authorization
 - Customer management
@@ -26,9 +30,11 @@ The goal is to build a complete enterprise-style system including:
 - Inventory management
 - Shopping cart
 - Order management
-- Background processing
+- Background job processing
+- Scheduled tasks
 - Event-driven workflows
-- Automated deployment infrastructure
+- Automated CI/CD pipelines
+- Container-based deployment infrastructure
 
 ---
 
@@ -39,8 +45,10 @@ The goal is to build a complete enterprise-style system including:
 - PHP
 - Laravel
 - Laravel Fortify
-- MySQL / TiDB
+- MySQL / TiDB Cloud
 - Redis
+- Laravel Queue System
+- Laravel Scheduler
 
 ## Frontend
 
@@ -50,10 +58,13 @@ The goal is to build a complete enterprise-style system including:
 ## Infrastructure & DevOps
 
 - Docker
+- Docker Compose concepts
 - GitHub Actions
 - GitHub Container Registry
 - Self-hosted runners
 - Linux servers
+- Oracle Cloud Infrastructure
+- Cloudflare DNS / CDN / WAF
 
 ---
 
@@ -67,6 +78,7 @@ The application is structured around:
 - Domain-based organization
 - Independent feature evolution
 - Clear application workflows
+- Maintainable business logic boundaries
 
 Full documentation:
 
@@ -87,6 +99,8 @@ Current implemented domains:
 - Cart
 - Orders
 
+Future domains will extend the ecommerce ecosystem with additional business capabilities.
+
 Domain documentation:
 
 → [Business Domains](docs/domains.md)
@@ -95,12 +109,14 @@ Domain documentation:
 
 # Development Workflow
 
-The project follows an enterprise-style development workflow based on:
+The project follows an enterprise-style Git workflow based on:
 
 - Feature branches
 - Pull Requests
+- Code review process
 - Automated validation
 - Controlled releases
+- Semantic versioning
 
 Documentation:
 
@@ -110,13 +126,20 @@ Documentation:
 
 # CI/CD & Automation
 
-EasyShop uses GitHub Actions to automate:
+EasyShop uses GitHub Actions to automate the complete delivery workflow.
+
+Current automation includes:
 
 - Pull Request validation
 - Continuous Integration
 - Docker image creation
 - Image publishing
-- Deployment triggers
+- Deployment automation
+- Environment-specific releases
+
+Docker images are distributed through:
+
+- GitHub Container Registry (GHCR)
 
 Documentation:
 
@@ -126,14 +149,36 @@ Documentation:
 
 # Deployment Infrastructure
 
-The application is deployed using Docker-based services with separated runners.
+EasyShop uses a container-based deployment architecture with separated application responsibilities.
 
-Current deployment architecture:
+Current services:
 
-- Web service
-- Worker service
-- Docker images from GHCR
-- Self-hosted deployment runners
+## Public Application Layer
+
+- Laravel Web application
+- Public HTTP/HTTPS exposure
+- User-facing application services
+
+## Private Background Layer
+
+- Laravel Queue Worker
+- Laravel Scheduler
+- Redis infrastructure
+
+Internal services communicate through a dedicated Docker network.
+
+## Current architecture:
+
+Public VM:
+
+Laravel Web
+
+Private VM:
+
+Laravel Worker
+Laravel Scheduler
+Redis
+
 
 Documentation:
 
@@ -141,20 +186,54 @@ Documentation:
 
 ---
 
-# Infrastructure
+# Cloud Infrastructure
 
-The infrastructure documentation describes:
+EasyShop infrastructure is deployed on Oracle Cloud Infrastructure.
 
-- Server architecture
-- Network organization
-- Docker environment
-- External services
-- Storage strategy
-- Runtime components
+The environment is organized with separated workloads:
+
+## Public Infrastructure
+
+Responsible for:
+
+- Web application exposure
+- HTTPS traffic handling
+- Public endpoints
+
+## Private Infrastructure
+
+Responsible for:
+
+- Background processing
+- Queue execution
+- Scheduled operations
+- Internal caching services
+
+Network communication is controlled through:
+
+- VM network rules
+- Private service isolation
+- Controlled outbound access
 
 Documentation:
 
 → [Infrastructure](docs/infrastructure.md)
+
+---
+
+# Security & Edge Layer
+
+Public traffic is managed through Cloudflare services.
+
+Implemented features:
+
+- DNS management
+- CDN integration
+- Edge caching
+- Web Application Firewall (WAF)
+- Traffic filtering and protection
+
+The edge layer provides an additional security boundary before requests reach the application infrastructure.
 
 ---
 
@@ -166,8 +245,16 @@ Current environments:
 
 - Development
 - Worker Development
+- Scheduler Development
 - Staging
-- Production (planned)
+- Production-ready release baseline
+
+Each environment has isolated:
+
+- Configuration
+- Secrets
+- Deployment workflow
+- Runtime services
 
 Documentation:
 
@@ -187,7 +274,7 @@ Complete technical documentation:
 | [Git Workflow](docs/git-workflow.md) | Branch strategy and development process |
 | [CI/CD](docs/cicd.md) | Automation pipelines and workflows |
 | [Deployment](docs/deployment.md) | Docker deployment strategy |
-| [Infrastructure](docs/infrastructure.md) | Servers, networking and services |
+| [Infrastructure](docs/infrastructure.md) | Cloud infrastructure, networking and services |
 | [Environments](docs/environments.md) | Environment configuration strategy |
 | [Roadmap](docs/roadmap.md) | Future development plans |
 | [Changelog](CHANGELOG.md) | Release history |
@@ -201,7 +288,6 @@ EasyShop follows Semantic Versioning:
 vMAJOR.MINOR.PATCH
 
 
-
 Each release represents an important project milestone and includes:
 
 - Git tag
@@ -210,10 +296,14 @@ Each release represents an important project milestone and includes:
 
 Current version:
 
-**v0.9.0 - Immutable Docker Deployments & CI/CD Stabilization**
+**v1.0.0 - Initial Production Release**
 
 Release history:
 
+Release history:
+
+- [v1.0.0 - Production Infrastructure & Private Service Networking](CHANGELOG.md#v100---production-infrastructure--private-service-networking)
+- [v0.10.0 - Scheduler Deployment and Background Infrastructure](CHANGELOG.md#v0100---scheduler-deployment-and-background-infrastructure)
 - [v0.9.0 - Immutable Docker Deployments & CI/CD Stabilization](CHANGELOG.md#v090---immutable-docker-deployments--cicd-stabilization)
 - [v0.8.0 - Containerized Deployment & DevOps Infrastructure](CHANGELOG.md#v080---containerized-deployment--devops-infrastructure)
 - [v0.7.0 - Main Release Baseline](CHANGELOG.md#v070---main-release-baseline)
@@ -223,14 +313,14 @@ Release history:
 - [v0.3.0 - Commerce Core](CHANGELOG.md#v030---commerce-core)
 - [v0.2.0 - Customer Domain Foundation](CHANGELOG.md#v020---customer-domain-foundation)
 - [v0.1.0 - Foundation & Authentication](CHANGELOG.md#v010---foundation--authentication)
-
+  
 ---
 
 # Development Status
 
-🚧 Active Development
+✅ Production-ready baseline achieved
 
-The project is continuously evolving with new ecommerce capabilities, infrastructure improvements, and enterprise features.
+The project continues evolving with new ecommerce capabilities, business domains, infrastructure improvements, and enterprise features.
 
 ---
 
