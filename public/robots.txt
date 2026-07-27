@@ -1,2 +1,37 @@
 User-agent: *
-Disallow:
+
+# Area amministrativa
+Disallow: /admin/
+Disallow: /manager/
+
+# Area cliente privata
+Disallow: /customer/
+Disallow: /dashboard/
+Disallow: /profile/
+
+# Autenticazione
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Processo acquisto
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /orders/
+
+# Endpoint tecnici
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+
+# Laravel / sistema
+Disallow: /horizon/
+Disallow: /telescope/
+Disallow: /pulse/
+
+# Blocca eventuali query dinamiche
+Disallow: /*?*
+
+# Sitemap pubblica
+Sitemap: https://easyshop.gravities.net/sitemap.xml
